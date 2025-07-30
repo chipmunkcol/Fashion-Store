@@ -12,9 +12,51 @@ export const categories: Category[] = [
   { id: "8", name: "액세서리", slug: "accessory" },
 ];
 
-// Mock product images (using picsum for demo)
-const getRandomImage = (id: number, width = 300, height = 400) =>
-  `https://picsum.photos/seed/${id}/${width}/${height}`;
+// Fashion-specific images using Unsplash
+const getFashionImage = (category: string, index: number) => {
+  const fashionCategories = {
+    outer: [
+      "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=400&h=500&fit=crop",
+    ],
+    top: [
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=500&fit=crop",
+    ],
+    bottom: [
+      "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1506629905847-f4e6b2e95fa8?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=500&fit=crop",
+    ],
+    dress: [
+      "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400&h=500&fit=crop",
+    ],
+    shoes: [
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=400&h=500&fit=crop",
+    ],
+    bag: [
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=500&fit=crop",
+    ],
+    accessory: [
+      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=400&h=500&fit=crop",
+      "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=500&fit=crop",
+    ],
+  };
+
+  const images =
+    fashionCategories[category as keyof typeof fashionCategories] ||
+    fashionCategories.top;
+  return images[index % images.length] + `&auto=format&q=75`;
+};
 
 // Mock products
 export const mockProducts: Product[] = [
@@ -25,7 +67,11 @@ export const mockProducts: Product[] = [
     price: 39000,
     originalPrice: 59000,
     discount: 34,
-    images: [getRandomImage(1), getRandomImage(11), getRandomImage(21)],
+    images: [
+      getFashionImage("outer", 0),
+      getFashionImage("outer", 1),
+      getFashionImage("outer", 2),
+    ],
     category: "outer",
     isLiked: false,
     likeCount: 245,
@@ -40,7 +86,11 @@ export const mockProducts: Product[] = [
     name: "베이직 롱 슬리브 티",
     brand: "MINIMAL STUDIO",
     price: 19900,
-    images: [getRandomImage(2), getRandomImage(12), getRandomImage(22)],
+    images: [
+      getFashionImage("top", 0),
+      getFashionImage("top", 1),
+      getFashionImage("top", 2),
+    ],
     category: "top",
     isLiked: true,
     likeCount: 189,
@@ -55,7 +105,11 @@ export const mockProducts: Product[] = [
     name: "하이웨스트 와이드 팬츠",
     brand: "YOURS TRULY",
     price: 42000,
-    images: [getRandomImage(3), getRandomImage(13), getRandomImage(23)],
+    images: [
+      getFashionImage("bottom", 0),
+      getFashionImage("bottom", 1),
+      getFashionImage("bottom", 2),
+    ],
     category: "bottom",
     isLiked: false,
     likeCount: 156,
@@ -72,7 +126,11 @@ export const mockProducts: Product[] = [
     price: 35000,
     originalPrice: 45000,
     discount: 22,
-    images: [getRandomImage(4), getRandomImage(14), getRandomImage(24)],
+    images: [
+      getFashionImage("bottom", 1),
+      getFashionImage("bottom", 2),
+      getFashionImage("bottom", 0),
+    ],
     category: "bottom",
     isLiked: true,
     likeCount: 203,
@@ -87,7 +145,11 @@ export const mockProducts: Product[] = [
     name: "플라워 프린트 원피스",
     brand: "ROMANTIC CODE",
     price: 55000,
-    images: [getRandomImage(5), getRandomImage(15), getRandomImage(25)],
+    images: [
+      getFashionImage("dress", 0),
+      getFashionImage("dress", 1),
+      getFashionImage("dress", 2),
+    ],
     category: "dress",
     isLiked: false,
     likeCount: 287,
@@ -102,7 +164,11 @@ export const mockProducts: Product[] = [
     name: "청키 스니커즈",
     brand: "STREET WALKER",
     price: 78000,
-    images: [getRandomImage(6), getRandomImage(16), getRandomImage(26)],
+    images: [
+      getFashionImage("shoes", 0),
+      getFashionImage("shoes", 1),
+      getFashionImage("shoes", 2),
+    ],
     category: "shoes",
     isLiked: true,
     likeCount: 145,
@@ -119,7 +185,11 @@ export const mockProducts: Product[] = [
     price: 89000,
     originalPrice: 129000,
     discount: 31,
-    images: [getRandomImage(7), getRandomImage(17), getRandomImage(27)],
+    images: [
+      getFashionImage("bag", 0),
+      getFashionImage("bag", 1),
+      getFashionImage("bag", 2),
+    ],
     category: "bag",
     isLiked: false,
     likeCount: 234,
@@ -134,7 +204,11 @@ export const mockProducts: Product[] = [
     name: "실버 체인 목걸이",
     brand: "JEWELRY LAB",
     price: 29000,
-    images: [getRandomImage(8), getRandomImage(18), getRandomImage(28)],
+    images: [
+      getFashionImage("accessory", 0),
+      getFashionImage("accessory", 1),
+      getFashionImage("accessory", 2),
+    ],
     category: "accessory",
     isLiked: true,
     likeCount: 167,
@@ -148,7 +222,11 @@ export const mockProducts: Product[] = [
     name: "오버사이즈 후드 집업",
     brand: "CASUAL MOOD",
     price: 45000,
-    images: [getRandomImage(9), getRandomImage(19), getRandomImage(29)],
+    images: [
+      getFashionImage("outer", 1),
+      getFashionImage("outer", 2),
+      getFashionImage("outer", 0),
+    ],
     category: "outer",
     isLiked: false,
     likeCount: 198,
@@ -163,7 +241,11 @@ export const mockProducts: Product[] = [
     name: "코튼 크롭 블라우스",
     brand: "PURE COTTON",
     price: 32000,
-    images: [getRandomImage(10), getRandomImage(20), getRandomImage(30)],
+    images: [
+      getFashionImage("top", 1),
+      getFashionImage("top", 2),
+      getFashionImage("top", 0),
+    ],
     category: "top",
     isLiked: true,
     likeCount: 176,
@@ -185,9 +267,21 @@ export const mockProducts: Product[] = [
     discount:
       Math.random() > 0.5 ? Math.floor(Math.random() * 50) + 10 : undefined,
     images: [
-      getRandomImage(i + 31),
-      getRandomImage(i + 81),
-      getRandomImage(i + 131),
+      getFashionImage(
+        categories[Math.floor(Math.random() * (categories.length - 1)) + 1]
+          .slug,
+        0
+      ),
+      getFashionImage(
+        categories[Math.floor(Math.random() * (categories.length - 1)) + 1]
+          .slug,
+        1
+      ),
+      getFashionImage(
+        categories[Math.floor(Math.random() * (categories.length - 1)) + 1]
+          .slug,
+        2
+      ),
     ],
     category:
       categories[Math.floor(Math.random() * (categories.length - 1)) + 1].slug,
@@ -224,9 +318,21 @@ export const generateMoreProducts = (
     discount:
       Math.random() > 0.6 ? Math.floor(Math.random() * 50) + 10 : undefined,
     images: [
-      getRandomImage(startId + i + 200),
-      getRandomImage(startId + i + 400),
-      getRandomImage(startId + i + 600),
+      getFashionImage(
+        categories[Math.floor(Math.random() * (categories.length - 1)) + 1]
+          .slug,
+        0
+      ),
+      getFashionImage(
+        categories[Math.floor(Math.random() * (categories.length - 1)) + 1]
+          .slug,
+        1
+      ),
+      getFashionImage(
+        categories[Math.floor(Math.random() * (categories.length - 1)) + 1]
+          .slug,
+        2
+      ),
     ],
     category:
       categories[Math.floor(Math.random() * (categories.length - 1)) + 1].slug,

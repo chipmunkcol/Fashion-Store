@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Heart, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { Product } from "../types";
@@ -10,6 +11,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
+  const navigate = useNavigate();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const { isLiked, toggleLike } = useProductStore();
@@ -43,8 +45,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
       }}
       className="card cursor-pointer group tap-highlight-none"
       onClick={() => {
-        // 상품 상세 페이지로 이동 (추후 구현)
-        console.log("Navigate to product:", product.id);
+        navigate(`/product/${product.id}`);
       }}
     >
       {/* Product Image */}

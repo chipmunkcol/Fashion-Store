@@ -1,22 +1,33 @@
-import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import ProductGrid from "./components/ProductGrid";
+import ProductDetail from "./components/ProductDetail";
 import BottomNavigation from "./components/BottomNavigation";
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header */}
-      <Header />
+    <Router>
+      <div className="max-w-screen-sm mx-auto min-h-screen bg-gray-50">
+        <Routes>
+          {/* Home Page */}
+          <Route
+            path="/"
+            element={
+              <div className="flex flex-col min-h-screen">
+                <Header />
+                <main className="flex-1 pb-20 ">
+                  <ProductGrid />
+                </main>
+                <BottomNavigation />
+              </div>
+            }
+          />
 
-      {/* Main Content */}
-      <main className="flex-1 pb-20">
-        <ProductGrid />
-      </main>
-
-      {/* Bottom Navigation */}
-      <BottomNavigation />
-    </div>
+          {/* Product Detail Page */}
+          <Route path="/product/:id" element={<ProductDetail />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
