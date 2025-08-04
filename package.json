@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.8.4",
+    "@tosspayments/payment-sdk": "^1.9.1",
     "@types/react-router-dom": "^5.3.3",
     "framer-motion": "^10.16.5",
     "lucide-react": "^0.294.0",

@@ -15,12 +15,14 @@ import {
 } from "lucide-react";
 import { mockProducts } from "../data/mockData";
 import { Product } from "../types";
+import { useCartStore } from "../stores/useCartStore";
 
 interface ProductDetailProps {}
 
 const ProductDetail: React.FC<ProductDetailProps> = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { addToCart, getItemCount } = useCartStore();
 
   const product = mockProducts.find((p) => p.id === id);
 
@@ -60,6 +62,33 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
 
   const handleLikeToggle = () => {
     setIsLiked(!isLiked);
+  };
+
+  const handleAddToCart = () => {
+    if (!product || !selectedSize || !selectedColor) return;
+
+    const selectedOptions = {
+      size: selectedSize,
+      color: selectedColor,
+    };
+
+    addToCart(product, quantity, selectedOptions);
+
+    // 성공 알림 (간단한 alert로 구현, 실제로는 toast 등을 사용)
+    alert(`${product.name}이(가) 장바구니에 추가되었습니다!`);
+  };
+
+  const handleBuyNow = () => {
+    if (!product || !selectedSize || !selectedColor) return;
+
+    const selectedOptions = {
+      size: selectedSize,
+      color: selectedColor,
+    };
+
+    // 장바구니에 추가 후 바로 결제 페이지로 이동
+    addToCart(product, quantity, selectedOptions);
+    navigate("/checkout");
   };
 
   const renderStars = (rating: number) => {
@@ -476,7 +505,12 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
           </button>
 
           <button
-            className="px-6 py-4 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg font-semibold transition-colors flex items-center justify-center space-x-2"
+            onClick={handleAddToCart}
+            className={`px-6 py-4 rounded-lg font-semibold transition-colors flex items-center justify-center space-x-2 ${
+              selectedSize && selectedColor
+                ? "bg-gray-100 hover:bg-gray-200 text-gray-900"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
             disabled={!selectedSize || !selectedColor}
           >
             <ShoppingCart className="h-5 w-5" />
@@ -484,6 +518,7 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
           </button>
 
           <button
+            onClick={handleBuyNow}
             className={`flex-1 py-4 rounded-lg font-semibold transition-colors flex items-center justify-center space-x-2 ${
               selectedSize && selectedColor
                 ? "bg-black hover:bg-gray-800 text-white"

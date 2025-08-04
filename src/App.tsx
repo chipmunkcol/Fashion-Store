@@ -2,6 +2,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import ProductGrid from "./components/ProductGrid";
 import ProductDetail from "./components/ProductDetail";
+import Cart from "./components/Cart";
+import Checkout from "./components/Checkout";
+import PaymentResult from "./components/PaymentResult";
 import BottomNavigation from "./components/BottomNavigation";
 
 function App() {
@@ -25,6 +28,16 @@ function App() {
 
           {/* Product Detail Page */}
           <Route path="/product/:id" element={<ProductDetail />} />
+
+          {/* Cart Page */}
+          <Route path="/cart" element={<Cart />} />
+
+          {/* Checkout Page */}
+          <Route path="/checkout" element={<Checkout />} />
+
+          {/* Payment Result Pages */}
+          <Route path="/payment/success" element={<PaymentResult />} />
+          <Route path="/payment/fail" element={<PaymentResult />} />
         </Routes>
       </div>
     </Router>
