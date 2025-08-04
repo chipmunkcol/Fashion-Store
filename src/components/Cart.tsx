@@ -253,7 +253,7 @@ const Cart: React.FC = () => {
           </button>
           <button
             onClick={handleCheckout}
-            className="flex-2 bg-black hover:bg-gray-800 text-white py-4 rounded-lg font-semibold transition-colors"
+            className="flex-1 bg-black hover:bg-gray-800 text-white py-4 rounded-lg font-semibold transition-colors"
           >
             결제하기 ({getTotalItems()}개)
           </button>

@@ -2,11 +2,17 @@ import React, { useState } from "react";
 import { Search, Filter } from "lucide-react";
 import { categories } from "../data/mockData";
 import { useProductStore } from "../stores/useProductStore";
+import { Filter as FilterType } from "../types";
 
 const Header: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
-  const { searchQuery, selectedCategory, setSearchQuery, setSelectedCategory } =
-    useProductStore();
+  const {
+    setFilter,
+    searchQuery,
+    selectedCategory,
+    setSearchQuery,
+    setSelectedCategory,
+  } = useProductStore();
 
   return (
     <header className="bg-white sticky top-0 z-40 border-b border-gray-200">
@@ -53,7 +59,7 @@ const Header: React.FC = () => {
       {showFilters && (
         <div className="px-4 pb-4 border-t border-gray-100 bg-gray-50">
           <div className="py-3">
-            <h3 className="text-sm font-medium text-gray-700 mb-2">정렬</h3>
+            {/* <h3 className="text-sm font-medium text-gray-700 mb-2">정렬</h3> */}
             <div className="flex gap-2 flex-wrap">
               {[
                 { key: "newest", label: "최신순" },
@@ -65,6 +71,9 @@ const Header: React.FC = () => {
                 <button
                   key={sort.key}
                   className="px-3 py-1.5 bg-white rounded-md text-xs text-gray-600 border border-gray-200 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200 tap-highlight-none"
+                  onClick={() =>
+                    setFilter({ sortBy: sort.key as FilterType["sortBy"] })
+                  }
                 >
                   {sort.label}
                 </button>
