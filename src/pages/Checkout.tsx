@@ -112,7 +112,9 @@ const Checkout: React.FC = () => {
         orderName: orderName,
         customerName: customerInfo.name,
         customerEmail: customerInfo.email,
-        customerMobilePhone: customerInfo.phone,
+        customerMobilePhone: customerInfo.phone.includes("-")
+          ? customerInfo.phone.replace(/[^0-9]/g, "")
+          : customerInfo.phone,
         successUrl: `${window.location.origin}/payment/success`,
         failUrl: `${window.location.origin}/payment/fail`,
       });
@@ -121,7 +123,7 @@ const Checkout: React.FC = () => {
       clearCart();
     } catch (error) {
       console.error("Payment error:", error);
-      alert("결제 중 오류가 발생했습니다. 다시 시도해주세요.");
+      alert(error);
     } finally {
       setIsLoading(false);
     }
@@ -243,16 +245,17 @@ const Checkout: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                주소
+                주소 <span className="text-red-500">*</span>
               </label>
               <div className="space-y-2">
-                <input
+                {/* <input
                   type="text"
                   value={customerInfo.zipCode}
                   onChange={(e) => handleInputChange("zipCode", e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
                   placeholder="우편번호"
-                />
+                  required
+                /> */}
                 <input
                   type="text"
                   value={customerInfo.address}
@@ -364,13 +367,15 @@ const Checkout: React.FC = () => {
             isLoading ||
             !customerInfo.name ||
             !customerInfo.phone ||
-            !customerInfo.email
+            !customerInfo.email ||
+            !customerInfo.address
           }
           className={`w-full py-4 rounded-lg font-semibold transition-colors ${
             isLoading ||
             !customerInfo.name ||
             !customerInfo.phone ||
-            !customerInfo.email
+            !customerInfo.email ||
+            !customerInfo.address
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-black hover:bg-gray-800 text-white"
           }`}

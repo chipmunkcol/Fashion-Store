@@ -23,6 +23,8 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
   const { addToCart } = useCartStore();
 
   const product = mockProducts.find((p) => p.id === id);
+  const hasDiscount =
+    product?.discount === 0 || product?.discount === undefined ? false : true;
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -239,7 +241,7 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
           </div>
 
           <div className="flex items-center space-x-2">
-            {product.originalPrice && (
+            {hasDiscount && product.originalPrice && (
               <span className="text-lg text-gray-400 line-through">
                 ₩{product.originalPrice.toLocaleString()}
               </span>
@@ -247,7 +249,7 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
             <span className="text-2xl font-bold text-gray-900">
               ₩{product.price.toLocaleString()}
             </span>
-            {product.discount && (
+            {hasDiscount && product.discount && (
               <span className="bg-red-100 text-red-600 px-2 py-1 rounded text-sm font-medium">
                 {product.discount}%
               </span>
@@ -478,7 +480,7 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
             <span className="text-xs text-gray-500">({quantity}개)</span>
           </div>
           <div className="flex items-center space-x-2">
-            {product.originalPrice && (
+            {hasDiscount && product.originalPrice && (
               <span className="text-sm text-gray-400 line-through">
                 ₩{(product.originalPrice * quantity).toLocaleString()}
               </span>

@@ -93,10 +93,10 @@ export const useInfiniteProducts = (filter?: Filter, searchQuery?: string) => {
     getNextPageParam: (lastPage) => {
       return lastPage.hasNextPage ? lastPage.nextCursor || 0 : undefined;
     },
-    // staleTime: 5 * 60 * 1000, // 5 minutes
-    // gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 0,
-    gcTime: 0,
+    staleTime: 1 * 60 * 1000, // 1 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+    // staleTime: 0,
+    // gcTime: 0,
   });
 };
 
