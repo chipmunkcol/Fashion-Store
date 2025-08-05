@@ -17,7 +17,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
   const { isLiked, toggleLike } = useProductStore();
 
   const liked = isLiked(product.id);
-  const hasDiscount = product.originalPrice && product.discount;
+  const hasDiscount =
+    product.discount === 0 || product.discount === undefined ? false : true;
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.preventDefault();

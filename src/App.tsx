@@ -1,11 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
-import ProductGrid from "./components/ProductGrid";
-import ProductDetail from "./components/ProductDetail";
-import Cart from "./components/Cart";
-import Checkout from "./components/Checkout";
-import PaymentResult from "./components/PaymentResult";
-import BottomNavigation from "./components/BottomNavigation";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import Main from "./pages/Main";
+import PaymentResult from "./pages/PaymentResult";
+import ProductDetail from "./pages/ProductDetail";
 
 function App() {
   return (
@@ -13,18 +11,7 @@ function App() {
       <div className="max-w-screen-sm mx-auto min-h-screen bg-gray-50">
         <Routes>
           {/* Home Page */}
-          <Route
-            path="/"
-            element={
-              <div className="flex flex-col min-h-screen">
-                <Header />
-                <main className="flex-1 pb-20 ">
-                  <ProductGrid />
-                </main>
-                <BottomNavigation />
-              </div>
-            }
-          />
+          <Route path="/" element={<Main />} />
 
           {/* Product Detail Page */}
           <Route path="/product/:id" element={<ProductDetail />} />

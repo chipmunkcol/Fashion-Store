@@ -35,14 +35,6 @@ const ProductGrid: React.FC = () => {
     return data?.pages?.flatMap((page) => page.products) ?? [];
   }, [data]);
 
-  if (isLoading) {
-    return (
-      <div className="px-4 py-6">
-        <LoadingSkeleton />
-      </div>
-    );
-  }
-
   if (isError) {
     return (
       <div className="px-4 py-6">
@@ -83,14 +75,14 @@ const ProductGrid: React.FC = () => {
       </div>
 
       {/* Loading More Indicator */}
-      {isFetchingNextPage && (
+      {(isFetchingNextPage || isLoading) && (
         <div className="mt-6">
           <LoadingSkeleton count={4} />
         </div>
       )}
 
       {/* Infinite Scroll Trigger */}
-      {hasNextPage && (
+      {hasNextPage && !isFetchingNextPage && !isLoading && (
         <div ref={ref} className="h-10 flex items-center justify-center mt-4">
           <span className="text-sm text-gray-400">
             더 많은 상품 불러오는 중...

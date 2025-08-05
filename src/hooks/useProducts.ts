@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Product, ProductsResponse, Filter } from "../types";
-import { mockProducts, generateMoreProducts } from "../data/mockData";
+import { generateMoreProducts, mockProducts } from "../data/mockData";
+import { Filter, ProductsResponse } from "../types";
 
 // Mock API delay
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -78,7 +78,7 @@ const fetchProducts = async (
   return {
     products: paginatedProducts,
     hasNextPage,
-    nextCursor: hasNextPage ? `${page + 1}` : undefined,
+    nextCursor: hasNextPage ? page + 1 : undefined,
     total: products.length,
   };
 };
@@ -91,12 +91,12 @@ export const useInfiniteProducts = (filter?: Filter, searchQuery?: string) => {
       fetchProducts(pageParam, filter, searchQuery),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
-      return lastPage.hasNextPage
-        ? parseInt(lastPage.nextCursor || "0")
-        : undefined;
+      return lastPage.hasNextPage ? lastPage.nextCursor || 0 : undefined;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    // staleTime: 5 * 60 * 1000, // 5 minutes
+    // gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 0,
+    gcTime: 0,
   });
 };
 

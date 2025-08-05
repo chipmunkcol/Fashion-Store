@@ -1,20 +1,18 @@
-import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Heart,
-  Share,
-  Star,
   Minus,
   Plus,
-  ShoppingCart,
-  MessageCircle,
-  Truck,
   RotateCcw,
+  Share,
   Shield,
+  ShoppingCart,
+  Star,
+  Truck,
 } from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { mockProducts } from "../data/mockData";
-import { Product } from "../types";
 import { useCartStore } from "../stores/useCartStore";
 
 interface ProductDetailProps {}
@@ -22,7 +20,7 @@ interface ProductDetailProps {}
 const ProductDetail: React.FC<ProductDetailProps> = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { addToCart, getItemCount } = useCartStore();
+  const { addToCart } = useCartStore();
 
   const product = mockProducts.find((p) => p.id === id);
 

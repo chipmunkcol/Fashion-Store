@@ -76,7 +76,7 @@ export interface Filter {
 export interface ProductsResponse {
   products: Product[];
   hasNextPage: boolean;
-  nextCursor?: string;
+  nextCursor?: number;
   total: number;
 }
 

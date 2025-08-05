@@ -1,6 +1,6 @@
+import { Home, ShoppingCart } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Home, Grid3X3, Search, User, ShoppingCart } from "lucide-react";
 import { useCartStore } from "../stores/useCartStore";
 
 const BottomNavigation: React.FC = () => {

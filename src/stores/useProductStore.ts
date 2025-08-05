@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Product, Filter } from "../types";
+import { Filter } from "../types";
 
 interface ProductState {
   // State
@@ -65,7 +65,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
   },
 
   resetFilter: () => {
-    set((state) => ({
+    set(() => ({
       filter: defaultFilter,
       selectedCategory: "all",
       searchQuery: "",
