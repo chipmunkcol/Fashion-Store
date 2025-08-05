@@ -54,7 +54,7 @@ const ProductGrid: React.FC = () => {
     );
   }
 
-  if (products.length === 0) {
+  if (products.length === 0 && !isLoading && !isFetchingNextPage) {
     return (
       <div className="px-4 py-6">
         <div className="text-center py-12">
