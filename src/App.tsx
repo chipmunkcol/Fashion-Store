@@ -5,6 +5,7 @@ import Main from "./pages/Main";
 import PaymentResult from "./pages/PaymentResult";
 import ProductDetail from "./pages/ProductDetail";
 import Wishlist from "./pages/Wishlist";
+import BottomNavigation from "./components/BottomNavigation";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/payment/success" element={<PaymentResult />} />
           <Route path="/payment/fail" element={<PaymentResult />} />
         </Routes>
+        <BottomNavigation />
       </div>
     </Router>
   );

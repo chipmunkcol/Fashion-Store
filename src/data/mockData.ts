@@ -350,7 +350,7 @@ export const generateMoreProducts = (
     ],
     category:
       categories[Math.floor(Math.random() * (categories.length - 1)) + 1].slug,
-    isLiked: Math.random() > 0.7,
+    isLiked: false,
     likeCount: Math.floor(Math.random() * 500) + 10,
     reviewCount: Math.floor(Math.random() * 200) + 5,
     rating: Math.round((Math.random() * 2 + 3) * 10) / 10,

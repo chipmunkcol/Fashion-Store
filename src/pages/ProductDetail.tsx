@@ -472,7 +472,7 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
       </div>
 
       {/* Bottom Actions */}
-      <div className="sticky bottom-0 bg-white border-t border-gray-200 px-4 py-4 shadow-lg">
+      <div className="sticky bottom-[60px] bg-white border-t border-gray-200 px-4 py-4 shadow-lg">
         {/* Price Summary */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-2">

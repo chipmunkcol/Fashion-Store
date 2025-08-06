@@ -4,11 +4,11 @@ import React, { useMemo, useState } from "react";
 import Header from "../components/Header";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 import ProductCard from "../components/ProductCard";
-import { useInfiniteProducts } from "../hooks/useProducts";
+import { useProducts } from "../hooks/useProducts";
 import { useProductStore } from "../stores/useProductStore";
 
 const Wishlist: React.FC = () => {
-  const { data: productsData, isLoading } = useInfiniteProducts();
+  const { data: productsData, isLoading } = useProducts();
   const { likedProducts } = useProductStore();
   const [sortBy, setSortBy] = useState<"newest" | "price-low" | "price-high">(
     "newest"
@@ -16,11 +16,11 @@ const Wishlist: React.FC = () => {
   const [showSortMenu, setShowSortMenu] = useState(false);
 
   const products = useMemo(() => {
-    return productsData?.pages?.flatMap((page) => page.products) ?? [];
+    return productsData?.pages?.[0]?.products ?? [];
   }, [productsData]);
 
   const likedProductsList = useMemo(() => {
-    if (!products) return [];
+    if (!products.length) return [];
 
     const filteredProducts = products.filter((product) =>
       likedProducts.has(product.id)
@@ -39,7 +39,7 @@ const Wishlist: React.FC = () => {
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
     }
-  }, [productsData, likedProducts, sortBy]);
+  }, [products, likedProducts, sortBy]);
 
   const handleSortChange = (newSortBy: typeof sortBy) => {
     setSortBy(newSortBy);
@@ -183,6 +183,7 @@ const Wishlist: React.FC = () => {
           onClick={() => setShowSortMenu(false)}
         />
       )}
+      {/* <BottomNavigation /> */}
     </div>
   );
 };

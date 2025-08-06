@@ -360,7 +360,7 @@ const Checkout: React.FC = () => {
       </div>
 
       {/* Bottom Actions */}
-      <div className="sticky bottom-0 bg-white border-t border-gray-200 px-4 py-4 shadow-lg">
+      <div className="sticky z-50 bottom-0  bg-white border-t border-gray-200 px-4 py-4 shadow-lg">
         <button
           onClick={handlePayment}
           disabled={

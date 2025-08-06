@@ -93,7 +93,7 @@ export const useInfiniteProducts = (filter?: Filter, searchQuery?: string) => {
     getNextPageParam: (lastPage) => {
       return lastPage.hasNextPage ? lastPage.nextCursor || 0 : undefined;
     },
-    staleTime: 1 * 60 * 1000, // 1 minutes
+    staleTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     // staleTime: 0,
     // gcTime: 0,
@@ -103,4 +103,36 @@ export const useInfiniteProducts = (filter?: Filter, searchQuery?: string) => {
 // Custom hook for featured products (first page only)
 export const useFeaturedProducts = () => {
   return useInfiniteProducts({ sortBy: "popular" });
+};
+
+// Custom hook for all products (for wishlist - fetches all available products)
+export const useProducts = (filter?: Filter, searchQuery?: string) => {
+  return useInfiniteQuery({
+    queryKey: ["all-products", filter, searchQuery],
+    queryFn: async () => {
+      // Fetch all pages at once for wishlist
+      const allProducts = [];
+      let currentPage = 0;
+      let hasMore = true;
+
+      while (hasMore && currentPage <= 10) {
+        // Limit to prevent infinite loop
+        const pageData = await fetchProducts(currentPage, filter, searchQuery);
+        allProducts.push(...pageData.products);
+        hasMore = pageData.hasNextPage;
+        currentPage++;
+      }
+
+      return {
+        products: allProducts,
+        hasNextPage: false,
+        nextCursor: undefined,
+        total: allProducts.length,
+      };
+    },
+    initialPageParam: 0,
+    getNextPageParam: () => undefined, // No pagination needed
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes
+  });
 };

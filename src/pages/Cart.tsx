@@ -243,7 +243,7 @@ const Cart: React.FC = () => {
       </div>
 
       {/* Bottom Actions */}
-      <div className="max-w-screen-sm mx-auto fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-4 shadow-lg">
+      <div className="max-w-screen-sm mx-auto fixed z-50 bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-4 shadow-lg">
         <div className="flex space-x-3">
           <button
             onClick={() => navigate("/")}

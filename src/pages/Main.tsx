@@ -9,7 +9,7 @@ export default function Main() {
       <main className="flex-1 pb-20 ">
         <ProductGrid />
       </main>
-      <BottomNavigation />
+      {/* <BottomNavigation /> */}
     </div>
   );
 }
