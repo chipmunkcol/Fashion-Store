@@ -1,6 +1,10 @@
-# A-bly Fashion Store 🛍️
+# Fashion Store 🛍️
 
-모바일에 최적화된 패션 쇼핑몰입니다. 에이블리 스타일을 참고해 가볍고 직관적인 UX에 집중했습니다.
+모바일에 최적화된 패션 쇼핑몰입니다. 에이블리 스타일을 참고해 가볍고 직관적인 UX에 집중했습니다. <br />
+[🛍️Fashion Store](https://fashion-store-iota-three.vercel.app/)
+
+<img width="400" height="425" alt="image" src="https://github.com/user-attachments/assets/72687c96-eadd-46b3-8855-2ee9d7c56af8" />
+
 
 ## ✨ 주요 기능
 
