@@ -1,18 +1,27 @@
-import { Home, ShoppingCart } from "lucide-react";
+import { Home, ShoppingCart, Heart } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCartStore } from "../stores/useCartStore";
+import { useProductStore } from "../stores/useProductStore";
 
 const BottomNavigation: React.FC = () => {
   const navigate = useNavigate();
   const { getTotalItems } = useCartStore();
+  const { likedProducts } = useProductStore();
 
   const [activeTab, setActiveTab] = useState("home");
   const cartItemCount = getTotalItems();
+  const likedItemCount = likedProducts.size;
 
   const tabs = [
     { id: "home", label: "홈", icon: Home, path: "/" },
-    // { id: "category", label: "카테고리", icon: Grid3X3, path: "/category" },
+    {
+      id: "wishlist",
+      label: "찜",
+      icon: Heart,
+      path: "/wishlist",
+      badge: likedItemCount,
+    },
     {
       id: "cart",
       label: "장바구니",
@@ -50,12 +59,18 @@ const BottomNavigation: React.FC = () => {
                     isActive ? "text-primary-500" : "text-gray-400"
                   }`}
                 />
-                {/* Cart Badge */}
-                {tab.id === "cart" && tab.badge !== undefined && (
-                  <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
-                    {tab.badge > 99 ? "99+" : tab.badge}
-                  </div>
-                )}
+                {/* Badge */}
+                {(tab.id === "cart" || tab.id === "wishlist") &&
+                  tab.badge !== undefined &&
+                  tab.badge > 0 && (
+                    <div
+                      className={`absolute -top-2 -right-2 text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 ${
+                        tab.id === "wishlist" ? "bg-primary-500" : "bg-red-500"
+                      }`}
+                    >
+                      {tab.badge > 99 ? "99+" : tab.badge}
+                    </div>
+                  )}
               </div>
               <span
                 className={`text-xs font-medium ${

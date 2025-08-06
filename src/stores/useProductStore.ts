@@ -26,7 +26,7 @@ const defaultFilter: Filter = {
 
 export const useProductStore = create<ProductState>((set, get) => ({
   // Initial state
-  likedProducts: new Set<string>(["2", "4", "6", "8", "10"]), // Some pre-liked products
+  likedProducts: new Set<string>(), // Some pre-liked products
   searchQuery: "",
   selectedCategory: "all",
   filter: defaultFilter,

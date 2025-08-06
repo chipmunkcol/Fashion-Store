@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Heart, Star } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "../types";
 import { useProductStore } from "../stores/useProductStore";
 
@@ -14,6 +14,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
   const navigate = useNavigate();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [showLikeAnimation, setShowLikeAnimation] = useState(false);
+  const heartButtonRef = useRef<HTMLButtonElement>(null);
   const { isLiked, toggleLike } = useProductStore();
 
   const liked = isLiked(product.id);
@@ -23,7 +25,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
   const handleLikeClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    const wasLiked = liked;
     toggleLike(product.id);
+
+    // 좋아요를 추가할 때만 애니메이션 실행
+    if (!wasLiked) {
+      setShowLikeAnimation(true);
+      setTimeout(() => setShowLikeAnimation(false), 1000);
+    }
   };
 
   const handleImageLoad = () => {
@@ -93,6 +103,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
 
         {/* Like Button */}
         <button
+          ref={heartButtonRef}
           onClick={handleLikeClick}
           className={`absolute top-2 right-2 p-2 rounded-full transition-all duration-200 tap-highlight-none ${
             liked
@@ -100,12 +111,54 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
               : "bg-white/80 text-gray-400 hover:bg-white hover:text-primary-500"
           }`}
         >
-          <Heart
-            className={`w-4 h-4 transition-all duration-200 ${
-              liked ? "fill-current animate-bounce-light" : ""
-            }`}
-          />
+          <motion.div
+            animate={liked ? { scale: [1, 1.3, 1] } : { scale: 1 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
+            <Heart
+              className={`w-4 h-4 transition-all duration-200 ${
+                liked ? "fill-current" : ""
+              }`}
+            />
+          </motion.div>
         </button>
+
+        {/* Flying Heart Animation */}
+        <AnimatePresence>
+          {showLikeAnimation &&
+            heartButtonRef.current &&
+            (() => {
+              const rect = heartButtonRef.current?.getBoundingClientRect();
+              const initialLeft = rect?.left || 0;
+              const initialTop = rect?.top || 0;
+
+              return (
+                <motion.div
+                  initial={{
+                    left: initialLeft,
+                    top: initialTop,
+                    scale: 1.5,
+                    opacity: 1,
+                  }}
+                  animate={{
+                    left: window.innerWidth * 0.5, // Bottom nav heart icon position (50% from left)
+                    top: window.innerHeight - 40, // Bottom nav position
+                    scale: [1, 2, 0.5],
+                    opacity: [1, 0.8, 0],
+                    rotate: [0, 15, -15, 0],
+                  }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    duration: 0.8,
+                    ease: "easeInOut",
+                  }}
+                  className="pointer-events-none z-50 fixed"
+                >
+                  <Heart className="w-4 h-4 text-primary-500 fill-current drop-shadow-lg" />
+                </motion.div>
+              );
+            })()}
+        </AnimatePresence>
       </div>
 
       {/* Product Info */}
