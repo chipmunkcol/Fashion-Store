@@ -45,6 +45,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
     setImageLoaded(true);
   };
 
+  const heartCount = Math.floor(Math.random() * 4) + 5;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -128,35 +130,64 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
           {showLikeAnimation &&
             heartButtonRef.current &&
             (() => {
+              const heartCount = Math.floor(Math.random() * 4) + 5; // 5-8개 하트
               const rect = heartButtonRef.current?.getBoundingClientRect();
-              const initialLeft = rect?.left || 0;
-              const initialTop = rect?.top || 0;
+              const startX = rect?.left + rect?.width / 2 || 0;
+              const startY = rect?.top + rect?.height / 2 || 0;
+              const endX = window.innerWidth * 0.495; // 하단 네비 하트 아이콘 위치
+              const endY = window.innerHeight - 50; // 하단 네비 위치
 
-              return (
-                <motion.div
-                  initial={{
-                    left: initialLeft,
-                    top: initialTop,
-                    scale: 1.5,
-                    opacity: 1,
-                  }}
-                  animate={{
-                    left: window.innerWidth * 0.5, // Bottom nav heart icon position (50% from left)
-                    top: window.innerHeight - 40, // Bottom nav position
-                    scale: [1, 2, 0.5],
-                    opacity: [1, 0.8, 0],
-                    rotate: [0, 15, -15, 0],
-                  }}
-                  exit={{ opacity: 0 }}
-                  transition={{
-                    duration: 0.8,
-                    ease: "easeInOut",
-                  }}
-                  className="pointer-events-none z-50 fixed"
-                >
-                  <Heart className="w-4 h-4 text-primary-500 fill-current drop-shadow-lg" />
-                </motion.div>
-              );
+              return Array.from({ length: heartCount }).map((_, index) => {
+                // 각 하트마다 다른 경로 생성
+                const midX = startX + (Math.random() - 0.5) * 150; // 더 넓은 범위
+                const midY = startY - Math.random() * 50 - 100; // 위쪽으로 더 높이
+                const delay = index * 0.08; // 각 하트마다 약간씩 지연
+                const size = Math.random() * 8 + 12; // 12-20px 랜덤 크기
+                const rotation = Math.random() * 720 - 360; // -360도에서 +360도
+
+                return (
+                  <motion.div
+                    key={`heart-animation-${Date.now()}-${index}`}
+                    initial={{
+                      left: startX,
+                      top: startY,
+                      scale: 0,
+                      opacity: 1,
+                      rotate: 0,
+                    }}
+                    animate={{
+                      left: [startX, midX, endX], // 3점을 통한 곡선 경로
+                      top: [startY, midY, endY],
+                      scale: [0, 1.5, 1, 0.3], // 크기 변화 (나타나기 → 커지기 → 작아지기)
+                      opacity: [1, 1, 0.8, 0], // 투명도 변화
+                      rotate: rotation, // 회전
+                    }}
+                    exit={{
+                      opacity: 0,
+                      scale: 0,
+                    }}
+                    transition={{
+                      duration: 1.2 + Math.random() * 0.4, // 1.2-1.6초 랜덤 지속시간
+                      delay: delay,
+                      ease: "easeInOut",
+                      times: [0, 0.3, 0.7, 1], // 키프레임 타이밍
+                    }}
+                    className="pointer-events-none z-50 fixed"
+                    style={{
+                      fontSize: `${size}px`,
+                    }}
+                  >
+                    <Heart
+                      className="text-primary-500 fill-current drop-shadow-lg"
+                      style={{
+                        width: `${size}px`,
+                        height: `${size}px`,
+                        filter: `hue-rotate(${Math.random() * 60 - 30}deg)`, // 색상 약간 변화
+                      }}
+                    />
+                  </motion.div>
+                );
+              });
             })()}
         </AnimatePresence>
       </div>
