@@ -62,4 +62,86 @@ src/
 - `React.memo`, `useMemo` 로 렌더링 최적화
 - 모바일 반응형 및 iOS Safe Area 대응
 
-# Fashion-Store
+## 러닝 포인트💪
+
+1. Framer Motion
+
+- 핵심 메서드
+
+  - motion 컴포넌트
+  - AnimatePresence - 조건부 렌더링 애니메이션
+  - initial, animate, exit - 기본 애니메이션 라이프사이클
+  - transition - 애니메이션 타이밍과 이동
+  - whileHover, whileTap - 사용자 상호작용
+
+- 실무 TIP
+
+  - variants 활용 - 재사용 가능한 애니메이션 정의
+  - stagger 효과 - 리스트 아이템 순차 애니메이션
+  - layout 애니메이션 - 자동 레이아웃 전환
+  - 성능 모니터링 (과도한 애니메이션으로 사용자 경험 해치지 않도록 주의)
+
+- 기본 사용법
+
+```
+import {motion} from 'framer-motion'
+
+<motion.div
+  initial={{ x: -100, opacity: 0 }} // 시작 상태
+  animate={{ x: 0, opacity: 1 }}    // 끝 상태
+  exit={{ x: 100, opacity: 0 }}     // 종료 상태태
+  transition={{ duration: 0.5 }}  // 전환 설정
+>
+  애니메이션
+</motion.div>
+```
+
+```
+import { AnimatePresence } from 'framer-motion';
+
+<AnimatePresence>
+  {show && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      조건부 렌더링 요소
+    </motion.div>
+  )}
+</AnimatePresence>
+```
+
+- 제스처 애니메이션
+
+```
+<motion.button
+  whileHover={{ scale: 1.1 }}
+  whileTap={{ scale: 0.95 }}
+  whileFocus={{ boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.5)" }}
+>
+  버튼
+</motion.button>
+```
+
+```
+<motion.div
+  drag                                    // 모든 방향
+  drag="x"                               // x축만
+  drag="y"                               // y축만
+  dragConstraints={{
+    left: -100,
+    right: 100,
+    top: -50,
+    bottom: 50
+  }}
+  dragElastic={0.2}                      // 탄성
+  dragMomentum={false}                   // 관성 비활성화
+  whileDrag={{ scale: 1.1, rotate: 5 }}
+>
+  드래그 가능한 요소
+</motion.div>
+```
+
+- motion 컴포넌트 (모든 HTML 요소 motiion. 으로 변환 가능)
+  - motion.div, motion.buttonm, motion.img ...
