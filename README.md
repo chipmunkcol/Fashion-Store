@@ -71,7 +71,7 @@ import {motion} from 'framer-motion'
 <motion.div
   initial={{ x: -100, opacity: 0 }} // 시작 상태
   animate={{ x: 0, opacity: 1 }}    // 끝 상태
-  exit={{ x: 100, opacity: 0 }}     // 종료 상태태
+  exit={{ x: 100, opacity: 0 }}     // 종료 상태
   transition={{ duration: 0.5 }}  // 전환 설정
 >
   애니메이션

@@ -45,8 +45,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
     setImageLoaded(true);
   };
 
-  const heartCount = Math.floor(Math.random() * 4) + 5;
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -139,8 +137,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
 
               return Array.from({ length: heartCount }).map((_, index) => {
                 // 각 하트마다 다른 경로 생성
-                const midX = startX + (Math.random() - 0.5) * 150; // 더 넓은 범위
-                const midY = startY - Math.random() * 50 - 100; // 위쪽으로 더 높이
+                const midX = startX + (Math.random() - 0.5) * 170; // 더 넓은 범위
+                const midY = startY - Math.random() * 30 - 70; // 위쪽으로 더 높이
                 const delay = index * 0.08; // 각 하트마다 약간씩 지연
                 const size = Math.random() * 8 + 12; // 12-20px 랜덤 크기
                 const rotation = Math.random() * 720 - 360; // -360도에서 +360도
