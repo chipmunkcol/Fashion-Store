@@ -10,7 +10,7 @@ import BottomNavigation from "./components/BottomNavigation";
 function App() {
   return (
     <Router>
-      <div className="max-w-screen-sm mx-auto min-h-screen bg-gray-50">
+      <div className="max-w-screen-sm mx-auto min-h-screen bg-white">
         <Routes>
           {/* Home Page */}
           <Route path="/" element={<Main />} />

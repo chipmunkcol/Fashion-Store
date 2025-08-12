@@ -11,15 +11,21 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
+    "@react-three/postprocessing": "^2.19.1",
+    "@react-three/rapier": "^1.5.0",
     "@tanstack/react-query": "^5.8.4",
     "@tosspayments/payment-sdk": "^1.9.1",
     "@types/react-router-dom": "^5.3.3",
+    "@types/three": "^0.179.0",
     "framer-motion": "^10.16.5",
     "lucide-react": "^0.294.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intersection-observer": "^9.5.3",
     "react-router-dom": "^7.7.1",
+    "three": "^0.179.1",
     "zustand": "^4.4.6"
   },
   "devDependencies": {
