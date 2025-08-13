@@ -1,6 +1,15 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { generateMoreProducts, mockProducts } from "../data/mockData";
-import { Filter, ProductsResponse } from "../types";
+import {
+  useInfiniteQuery,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import {
+  generateMoreProducts,
+  mockProducts,
+  userLikedProducts,
+} from "../data/mockData";
+import { Filter, Product, ProductsResponse } from "../types";
 
 // Mock API delay
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -100,12 +109,90 @@ export const useInfiniteProducts = (filter?: Filter, searchQuery?: string) => {
   });
 };
 
+// Mock API function for fetching liked products
+const fetchLikedProducts = async (filter?: Filter): Promise<Product[]> => {
+  await delay(300); // Simulate API delay
+
+  let likedProducts = mockProducts.filter((product) =>
+    userLikedProducts.has(product.id)
+  );
+
+  // Apply category filter if provided
+  if (filter?.category && filter.category !== "all") {
+    likedProducts = likedProducts.filter(
+      (product) => product.category === filter.category
+    );
+  }
+
+  // Apply sort if provided
+  if (filter?.sortBy) {
+    switch (filter.sortBy) {
+      case "newest":
+        likedProducts.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        break;
+      case "popular":
+        likedProducts.sort((a, b) => b.likeCount - a.likeCount);
+        break;
+      case "price-low":
+        likedProducts.sort((a, b) => a.price - b.price);
+        break;
+      case "price-high":
+        likedProducts.sort((a, b) => b.price - a.price);
+        break;
+      case "review":
+        likedProducts.sort((a, b) => b.reviewCount - a.reviewCount);
+        break;
+    }
+  }
+
+  return likedProducts;
+};
+
+// Custom hook for liked products
+export const useLikedProducts = (filter?: Filter) => {
+  return useQuery({
+    queryKey: ["liked-products", filter],
+    queryFn: () => fetchLikedProducts(filter),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes
+  });
+};
+
 // Custom hook for featured products (first page only)
 export const useFeaturedProducts = () => {
   return useInfiniteProducts({ sortBy: "popular" });
 };
 
 // Custom hook for all products (for wishlist - fetches all available products)
+// Mock API function for toggling product like status
+const toggleProductLike = async (productId: string): Promise<void> => {
+  await delay(200); // Simulate API delay
+
+  if (userLikedProducts.has(productId)) {
+    userLikedProducts.delete(productId);
+  } else {
+    userLikedProducts.add(productId);
+  }
+};
+
+// Custom hook for toggling product like status
+export const useToggleLike = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: toggleProductLike,
+    onSuccess: (_, productId) => {
+      // Invalidate queries that might be affected by this change
+      queryClient.invalidateQueries({ queryKey: ["liked-products"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["all-products"] });
+    },
+  });
+};
+
 export const useProducts = (filter?: Filter, searchQuery?: string) => {
   return useInfiniteQuery({
     queryKey: ["all-products", filter, searchQuery],
