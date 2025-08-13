@@ -184,7 +184,7 @@ export const useToggleLike = () => {
 
   return useMutation({
     mutationFn: toggleProductLike,
-    onSuccess: (_, productId) => {
+    onSuccess: (_) => {
       // Invalidate queries that might be affected by this change
       queryClient.invalidateQueries({ queryKey: ["liked-products"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
