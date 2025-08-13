@@ -1,6 +1,6 @@
 import { Home, ShoppingCart, Heart } from "lucide-react";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useCartStore } from "../stores/useCartStore";
 import { useProductStore } from "../stores/useProductStore";
 
@@ -9,9 +9,16 @@ const BottomNavigation: React.FC = () => {
   const { getTotalItems } = useCartStore();
   const { likedProducts } = useProductStore();
 
-  const [activeTab, setActiveTab] = useState("home");
+  const location = useLocation();
+  const params = useParams();
+
+  const [activeTab, setActiveTab] = useState(location.pathname || "/");
   const cartItemCount = getTotalItems();
   const likedItemCount = likedProducts.size;
+
+  useEffect(() => {
+    setActiveTab(location.pathname || "/");
+  }, [location, params]);
 
   const tabs = [
     { id: "home", label: "홈", icon: Home, path: "/" },
@@ -34,7 +41,7 @@ const BottomNavigation: React.FC = () => {
   ];
 
   const handleTabClick = (tab: (typeof tabs)[0]) => {
-    setActiveTab(tab.id);
+    setActiveTab(tab.path);
     navigate(tab.path);
   };
 
@@ -43,7 +50,7 @@ const BottomNavigation: React.FC = () => {
       <div className="flex">
         {tabs.map((tab) => {
           const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
+          const isActive = activeTab === tab.path;
 
           return (
             <button
