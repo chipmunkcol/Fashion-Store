@@ -11,7 +11,7 @@ const fetchProducts = async (
   filter?: Filter,
   searchQuery?: string
 ): Promise<ProductsResponse> => {
-  await delay(800); // Simulate API delay
+  await delay(500); // Simulate API delay
 
   let products = [...mockProducts];
 

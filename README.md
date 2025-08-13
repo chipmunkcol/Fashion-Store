@@ -46,7 +46,12 @@ src/
 
 ## 러닝 포인트💪
 
-1. Framer Motion
+[🔗개발하면서 작성한 블로그 (React Three Fiber)](https://fkawnltjsejdj.tistory.com/category/R3F%28React%20Three%20Fiber%29)
+
+1. [Framer Motion](#1framer-motion)
+2. [Three.js (react-three/fiber)](#2-threejs-react-threefiber)
+
+### 1. Framer Motion
 
 - 핵심 메서드
 
@@ -127,3 +132,34 @@ import { AnimatePresence } from 'framer-motion';
 
 - motion 컴포넌트 (모든 HTML 요소 motiion. 으로 변환 가능)
   - motion.div, motion.buttonm, motion.img ...
+
+### 2. Three.js (react-three/fiber)
+
+- three.js 선행 학습
+
+```
+import * as THREE from 'three';
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+```
+
+핵심은 장면 / 카메라 / 렌더러
+
+- react-three/fiber (react에서 쉽게 three.js 사용)
+
+  - Canvas
+  - useFrame (매 프레임마다 힘 적용)
+
+- react-three/rapier (물리 엔진)
+
+  - Physics (중력)
+  - RigidBody (물리 객체)
+  - BallCollider (충돌 감지)
+
+- react-three/postprocessing (3d를 더 이쁘게)
+  - N8AO (화면 전체의 시각적 효과 / 깊이감 입체감 그림자 등)
