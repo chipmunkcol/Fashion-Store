@@ -110,16 +110,6 @@ function getRandomImage(category: string) {
   return images[Math.floor(Math.random() * images.length)];
 }
 
-// Mock user's liked products (simulating local storage or backend data)
-export const userLikedProducts = new Set<string>();
-
-// Initialize with some liked products
-mockProducts.forEach((product) => {
-  if (product.isLiked) {
-    userLikedProducts.add(product.id);
-  }
-});
-
 // Mock products
 // mock data image 썸네일이 다양하게 나오게 해줘 썸네일 이미지 모두 다르게 해줘
 export const mockProducts: Product[] = [
@@ -393,3 +383,13 @@ export const generateMoreProducts = (
     isSale: Math.random() > 0.7,
   }));
 };
+
+// Mock user's liked products (simulating local storage or backend data)
+export const userLikedProducts = new Set<string>();
+
+// Initialize with some liked products
+mockProducts.forEach((product) => {
+  if (product.isLiked) {
+    userLikedProducts.add(product.id);
+  }
+});

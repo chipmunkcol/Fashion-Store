@@ -14,6 +14,7 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { mockProducts } from "../data/mockData";
 import { useCartStore } from "../stores/useCartStore";
+import { useProductStore } from "../stores/useProductStore";
 
 interface ProductDetailProps {}
 
@@ -21,6 +22,7 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart } = useCartStore();
+  const { isLiked, toggleLike } = useProductStore();
 
   const product = mockProducts.find((p) => p.id === id);
   const hasDiscount =
@@ -28,7 +30,6 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [isLiked, setIsLiked] = useState(product?.isLiked || false);
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
 
@@ -61,7 +62,7 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
   };
 
   const handleLikeToggle = () => {
-    setIsLiked(!isLiked);
+    toggleLike(product.id);
   };
 
   const handleAddToCart = () => {
@@ -125,7 +126,9 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
             >
               <Heart
                 className={`h-6 w-6 ${
-                  isLiked ? "text-red-500 fill-current" : "text-gray-700"
+                  isLiked(product.id)
+                    ? "text-red-500 fill-current"
+                    : "text-gray-700"
                 }`}
               />
             </button>
@@ -496,12 +499,14 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
           <button
             onClick={handleLikeToggle}
             className={`p-4 rounded-lg border transition-colors ${
-              isLiked
+              isLiked(product.id)
                 ? "border-red-500 bg-red-50 text-red-500"
                 : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
             }`}
           >
-            <Heart className={`h-6 w-6 ${isLiked ? "fill-current" : ""}`} />
+            <Heart
+              className={`h-6 w-6 ${isLiked(product.id) ? "fill-current" : ""}`}
+            />
           </button>
 
           <button

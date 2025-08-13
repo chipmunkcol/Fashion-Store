@@ -156,8 +156,8 @@ export const useLikedProducts = (filter?: Filter) => {
   return useQuery({
     queryKey: ["liked-products", filter],
     queryFn: () => fetchLikedProducts(filter),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 60 * 60 * 1000, // 5 minutes
+    gcTime: 60 * 60 * 1000, // 5 minutes
   });
 };
 
