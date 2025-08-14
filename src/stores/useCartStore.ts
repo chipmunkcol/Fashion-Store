@@ -45,6 +45,7 @@ export const useCartStore = create<CartState>()(
             quantity,
             selectedOptions,
           };
+
           set({ items: [...items, newItem] });
         }
       },

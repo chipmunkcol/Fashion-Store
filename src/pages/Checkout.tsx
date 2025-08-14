@@ -8,6 +8,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useCartStore } from "../stores/useCartStore";
+import ReactGA from "react-ga4";
 
 // 토스페이먼츠 타입 정의
 declare global {
@@ -128,6 +129,20 @@ const Checkout: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    ReactGA.event("begin_checkout", {
+      currency: "KRW",
+      value: finalAmount,
+      items: items.map((item) => ({
+        item_id: item.id,
+        item_name: item.product.name,
+        category: item.product.category,
+        price: item.product.price,
+        quantity: item.quantity,
+      })),
+    });
+  }, []);
 
   const handleInputChange = (field: string, value: string) => {
     setCustomerInfo((prev) => ({

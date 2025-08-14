@@ -10,11 +10,12 @@ import {
   Star,
   Truck,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { mockProducts } from "../data/mockData";
 import { useCartStore } from "../stores/useCartStore";
 import { useProductStore } from "../stores/useProductStore";
+import ReactGA from "react-ga4";
 
 interface ProductDetailProps {}
 
@@ -75,7 +76,20 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
 
     addToCart(product, quantity, selectedOptions);
 
-    // 성공 알림 (간단한 alert로 구현, 실제로는 toast 등을 사용)
+    // GA4 설정
+    ReactGA.event("add_to_cart", {
+      currency: "KRW",
+      value: product.price,
+      items: [
+        {
+          item_id: product.id,
+          item_name: product.name,
+          category: product.category,
+          price: product.price,
+          quantity: quantity,
+        },
+      ],
+    });
     alert(`${product.name}이(가) 장바구니에 추가되었습니다!`);
   };
 
@@ -89,6 +103,7 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
 
     // 장바구니에 추가 후 바로 결제 페이지로 이동
     addToCart(product, quantity, selectedOptions);
+
     navigate("/checkout");
   };
 
@@ -104,6 +119,23 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
       />
     ));
   };
+
+  useEffect(() => {
+    // 상품 조회 이벤트
+    ReactGA.event("view_item", {
+      currency: "KRW",
+      value: product.price,
+      items: [
+        {
+          item_id: product.id,
+          item_name: product.name,
+          category: product.category,
+          price: product.price,
+          quantity: 1,
+        },
+      ],
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">

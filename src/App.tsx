@@ -6,8 +6,14 @@ import PaymentResult from "./pages/PaymentResult";
 import ProductDetail from "./pages/ProductDetail";
 import Wishlist from "./pages/Wishlist";
 import BottomNavigation from "./components/BottomNavigation";
+import ReactGA from "react-ga4";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    ReactGA.initialize("G-ZMJJ639LY0");
+  }, []);
+
   return (
     <Router>
       <div className="max-w-screen-sm mx-auto min-h-screen bg-white">

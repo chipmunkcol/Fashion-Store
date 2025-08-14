@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { CheckCircle, XCircle, Home, RotateCcw } from "lucide-react";
+import ReactGA from "react-ga4";
+import { useCartStore } from "../stores/useCartStore";
 
 const PaymentResult: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { items } = useCartStore();
   const [paymentInfo, setPaymentInfo] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,6 +31,25 @@ const PaymentResult: React.FC = () => {
       setIsLoading(false);
     }, 1000);
   }, [orderId, paymentKey, amount]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      ReactGA.event("purchase", {
+        transaction_id: orderId,
+        currency: "KRW",
+        value: amount,
+        shipping: 0,
+        tax: 0,
+        items: items.map((item) => ({
+          item_id: item.id,
+          item_name: item.product.name,
+          category: item.product.category,
+          price: item.product.price,
+          quantity: item.quantity,
+        })),
+      });
+    }
+  }, [isSuccess]);
 
   if (isLoading) {
     return (
