@@ -1,6 +1,9 @@
 # Fashion Store 🛍️
 
 모바일에 최적화된 패션 쇼핑몰입니다. 에이블리 스타일을 참고해 가볍고 직관적인 UX에 집중했습니다. <br />
+
+[🔗개발하면서 작성한 블로그 (이커머스 플랫폼 시스템)](https://fkawnltjsejdj.tistory.com/category/R3F%28React%20Three%20Fiber%29)
+
 [🛍️Fashion Store](https://fashion-store-iota-three.vercel.app/)
 
 <img width="400" height="425" alt="image" src="https://github.com/user-attachments/assets/91d026bc-8e1c-4793-a633-2ee3d493e0ae" />
@@ -45,8 +48,6 @@ src/
 - 모바일 반응형 및 iOS Safe Area 대응
 
 ## 러닝 포인트💪
-
-[🔗개발하면서 작성한 블로그 (React Three Fiber)](https://fkawnltjsejdj.tistory.com/category/R3F%28React%20Three%20Fiber%29)
 
 1. [Framer Motion](#1framer-motion)
 2. [Three.js (react-three/fiber)](#2-threejs-react-threefiber)
