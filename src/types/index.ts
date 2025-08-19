@@ -3,20 +3,20 @@ export interface Product {
   name: string;
   brand: string;
   price: number;
-  originalPrice?: number;
+  original_price?: number;
   discount?: number;
   images: string[];
   category: string;
   subcategory?: string;
-  isLiked: boolean;
-  likeCount: number;
-  reviewCount: number;
+  is_liked: boolean;
+  like_count: number;
+  review_count: number;
   rating: number;
   tags: string[];
-  createdAt: string;
-  isNew?: boolean;
-  isBest?: boolean;
-  isSale?: boolean;
+  created_at: string;
+  is_new?: boolean;
+  is_best?: boolean;
+  is_sale?: boolean;
 }
 
 export interface Category {

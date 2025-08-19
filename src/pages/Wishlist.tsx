@@ -1,45 +1,18 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpDown, Heart } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 import ProductCard from "../components/ProductCard";
-import { useProducts } from "../hooks/useProducts";
-import { useProductStore } from "../stores/useProductStore";
+import { useLikedProducts } from "../hooks/useTemp";
 
 const Wishlist: React.FC = () => {
-  const { data: productsData, isLoading } = useProducts();
-  const { likedProducts } = useProductStore();
+  // const { likedProducts } = useProductStore();
+  const { data: likedProductsList, error, isLoading } = useLikedProducts();
   const [sortBy, setSortBy] = useState<"newest" | "price-low" | "price-high">(
     "newest"
   );
   const [showSortMenu, setShowSortMenu] = useState(false);
-
-  const products = useMemo(() => {
-    return productsData?.pages?.[0]?.products ?? [];
-  }, [productsData]);
-
-  const likedProductsList = useMemo(() => {
-    if (!products.length) return [];
-
-    const filteredProducts = products.filter((product) =>
-      likedProducts.has(product.id)
-    );
-
-    // Sort products
-    switch (sortBy) {
-      case "price-low":
-        return [...filteredProducts].sort((a, b) => a.price - b.price);
-      case "price-high":
-        return [...filteredProducts].sort((a, b) => b.price - a.price);
-      case "newest":
-      default:
-        return [...filteredProducts].sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-    }
-  }, [products, likedProducts, sortBy]);
 
   const handleSortChange = (newSortBy: typeof sortBy) => {
     setSortBy(newSortBy);
@@ -59,6 +32,8 @@ const Wishlist: React.FC = () => {
     }
   };
 
+  if (error) return <div>에러: {error.message}</div>;
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -73,12 +48,11 @@ const Wishlist: React.FC = () => {
                 <h1 className="text-xl font-bold text-gray-900">찜한 상품</h1>
               </div>
               <div className="text-sm text-gray-500">
-                {likedProductsList.length}개
+                {likedProductsList?.length}개
               </div>
             </div>
-
             {/* Sort Controls */}
-            {likedProductsList.length > 0 && (
+            {likedProductsList && likedProductsList.length > 0 && (
               <div className="flex items-center justify-between">
                 <div className="text-sm text-gray-600">
                   총 {likedProductsList.length}개의 상품을 찜했어요
@@ -128,7 +102,7 @@ const Wishlist: React.FC = () => {
             <div className="px-4">
               <LoadingSkeleton count={6} />
             </div>
-          ) : likedProductsList.length === 0 ? (
+          ) : likedProductsList?.length === 0 ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -154,21 +128,22 @@ const Wishlist: React.FC = () => {
             <div className="px-4">
               <div className="grid grid-cols-2 gap-4">
                 <AnimatePresence mode="popLayout">
-                  {likedProductsList.map((product, index) => (
-                    <motion.div
-                      key={product.id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      transition={{
-                        duration: 0.3,
-                        delay: index * 0.05,
-                      }}
-                    >
-                      <ProductCard product={product} index={index} />
-                    </motion.div>
-                  ))}
+                  {likedProductsList &&
+                    likedProductsList.map((product, index) => (
+                      <motion.div
+                        key={product.id}
+                        layout
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{
+                          duration: 0.3,
+                          delay: index * 0.05,
+                        }}
+                      >
+                        <ProductCard product={product} index={index} />
+                      </motion.div>
+                    ))}
                 </AnimatePresence>
               </div>
             </div>

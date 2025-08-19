@@ -11,11 +11,11 @@ import {
   Truck,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import ReactGA from "react-ga4";
 import { useNavigate, useParams } from "react-router-dom";
-import { mockProducts } from "../data/mockData";
+import { useProduct } from "../hooks/useTemp";
 import { useCartStore } from "../stores/useCartStore";
 import { useProductStore } from "../stores/useProductStore";
-import ReactGA from "react-ga4";
 
 interface ProductDetailProps {}
 
@@ -25,7 +25,11 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
   const { addToCart } = useCartStore();
   const { isLiked, toggleLike } = useProductStore();
 
-  const product = mockProducts.find((p) => p.id === id);
+  if (!id) return null;
+
+  const { data: product, isLoading, isError } = useProduct(id);
+  // const product = products?.filter((p) => p.id === id);
+
   const hasDiscount =
     product?.discount === 0 || product?.discount === undefined ? false : true;
 
@@ -33,6 +37,14 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>에러!</div>;
+  }
 
   if (!product) {
     return (
@@ -120,22 +132,23 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
     ));
   };
 
-  useEffect(() => {
-    // 상품 조회 이벤트
-    ReactGA.event("view_item", {
-      currency: "KRW",
-      value: product.price,
-      items: [
-        {
-          item_id: product.id,
-          item_name: product.name,
-          category: product.category,
-          price: product.price,
-          quantity: 1,
-        },
-      ],
-    });
-  }, []);
+  // useEffect(() => {
+  //   // 상품 조회 이벤트
+  //   if (!id) return;
+  //   ReactGA.event("view_item", {
+  //     currency: "KRW",
+  //     value: product.price,
+  //     items: [
+  //       {
+  //         item_id: product.id,
+  //         item_name: product.name,
+  //         category: product.category,
+  //         price: product.price,
+  //         quantity: 1,
+  //       },
+  //     ],
+  //   });
+  // }, []);
 
   return (
     <div className="min-h-screen bg-white">

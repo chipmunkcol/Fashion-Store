@@ -9,9 +9,21 @@ import BottomNavigation from "./components/BottomNavigation";
 import ReactGA from "react-ga4";
 import { useEffect } from "react";
 
+// @ts-ignore
+import { supabase } from "./lib/supabase/supabase";
+
 function App() {
   useEffect(() => {
     ReactGA.initialize("G-ZMJJ639LY0");
+  }, []);
+
+  useEffect(() => {
+    async function init() {
+      const { data, error } = await supabase.from("test").select("*");
+      console.log(data);
+    }
+
+    init();
   }, []);
 
   return (

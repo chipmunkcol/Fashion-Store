@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import { Heart, Star } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Product } from "../types";
+import { useToggleLikeOptimized } from "../hooks/useTemp";
 import { useProductStore } from "../stores/useProductStore";
 
 interface ProductCardProps {
@@ -16,9 +17,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
   const [imageError, setImageError] = useState(false);
   const [showLikeAnimation, setShowLikeAnimation] = useState(false);
   const heartButtonRef = useRef<HTMLButtonElement>(null);
-  const { isLiked, toggleLike } = useProductStore();
+  const toggleLike = useToggleLikeOptimized();
 
-  const liked = isLiked(product.id);
+  const { isLiked, toggleLike: subToggleLike } = useProductStore();
+
+  const liked = isLiked(product.id) ? isLiked(product.id) : product.is_liked;
+
+  // const liked = isLiked(product.id);
   const hasDiscount =
     product.discount === 0 || product.discount === undefined ? false : true;
 
@@ -26,14 +31,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const wasLiked = liked;
-    toggleLike(product.id);
+    toggleLike.mutate({
+      productId: product.id,
+      isCurrentlyLiked: liked,
+    });
 
     // 좋아요를 추가할 때만 애니메이션 실행
-    if (!wasLiked) {
+    if (!liked) {
       setShowLikeAnimation(true);
       setTimeout(() => setShowLikeAnimation(false), 1000);
     }
+
+    // 좋아요 상태 전역 관리
+    subToggleLike(product.id);
   };
 
   const handleImageLoad = () => {

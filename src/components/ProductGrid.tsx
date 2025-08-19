@@ -1,12 +1,11 @@
 import React, { useMemo } from "react";
 import { useInView } from "react-intersection-observer";
-import ProductCard from "./ProductCard";
+import { useInfiniteProducts } from "../hooks/useTemp";
 import LoadingSkeleton from "./LoadingSkeleton";
-import { useInfiniteProducts } from "../hooks/useProducts";
-import { useProductStore } from "../stores/useProductStore";
+import ProductCard from "./ProductCard";
 
 const ProductGrid: React.FC = () => {
-  const { filter, searchQuery } = useProductStore();
+  // const { filter, searchQuery } = useProductStore();
 
   const {
     data,
@@ -16,7 +15,7 @@ const ProductGrid: React.FC = () => {
     isLoading,
     isError,
     error,
-  } = useInfiniteProducts(filter, searchQuery);
+  } = useInfiniteProducts();
 
   const { ref, inView } = useInView({
     threshold: 0,
