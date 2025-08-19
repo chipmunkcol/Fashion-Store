@@ -13,7 +13,7 @@ import {
 import React, { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { useNavigate, useParams } from "react-router-dom";
-import { useProduct } from "../hooks/useTemp";
+import { useProduct } from "../hooks/useProducts";
 import { useCartStore } from "../stores/useCartStore";
 import { useProductStore } from "../stores/useProductStore";
 

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useInView } from "react-intersection-observer";
-import { useInfiniteProducts } from "../hooks/useTemp";
+import { useInfiniteProducts } from "../hooks/useProducts";
 import LoadingSkeleton from "./LoadingSkeleton";
 import ProductCard from "./ProductCard";
 

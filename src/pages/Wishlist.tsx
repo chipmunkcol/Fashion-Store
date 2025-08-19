@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 import ProductCard from "../components/ProductCard";
-import { useLikedProducts } from "../hooks/useTemp";
+import { useLikedProducts } from "../hooks/useProducts";
 
 const Wishlist: React.FC = () => {
   // const { likedProducts } = useProductStore();

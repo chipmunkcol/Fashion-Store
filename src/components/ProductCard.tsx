@@ -3,7 +3,7 @@ import { Heart, Star } from "lucide-react";
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Product } from "../types";
-import { useToggleLikeOptimized } from "../hooks/useTemp";
+import { useToggleLikeOptimized } from "../hooks/useProducts";
 import { useProductStore } from "../stores/useProductStore";
 
 interface ProductCardProps {
