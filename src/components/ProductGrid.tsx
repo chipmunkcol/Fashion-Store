@@ -68,8 +68,8 @@ const ProductGrid: React.FC = () => {
     <div className="px-4 py-6">
       {/* Products Grid */}
       <div className="product-grid">
-        {products.map((product, index) => (
-          <ProductCard key={product.id} product={product} index={index} />
+        {products.map((product) => (
+          <ProductCard key={`product-card-${product.id}`} product={product} />
         ))}
       </div>
 

@@ -1,17 +1,21 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Heart, Star } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { memo, useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Product } from "../types";
-import { useToggleLikeOptimized } from "../hooks/useProducts";
+import {
+  useIsProductLiked,
+  useProduct,
+  useToggleLikeOptimized,
+} from "../hooks/useProducts";
 import { useProductStore } from "../stores/useProductStore";
 
 interface ProductCardProps {
   product: Product;
-  index: number;
+  // index: number;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
+const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
   const navigate = useNavigate();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -19,32 +23,37 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
   const heartButtonRef = useRef<HTMLButtonElement>(null);
   const toggleLike = useToggleLikeOptimized();
 
-  const { isLiked, toggleLike: subToggleLike } = useProductStore();
+  const isLiked = useProductStore((state) => state.isLiked);
+  const subToggleLike = useProductStore((state) => state.toggleLike);
 
-  const liked = isLiked(product.id) ? isLiked(product.id) : product.is_liked;
+  // const liked = isLiked(product.id) ? isLiked(product.id) : product.is_liked;
+  const liked = isLiked(product.id);
 
   // const liked = isLiked(product.id);
   const hasDiscount =
     product.discount === 0 || product.discount === undefined ? false : true;
 
-  const handleLikeClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleLikeClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-    toggleLike.mutate({
-      productId: product.id,
-      isCurrentlyLiked: liked,
-    });
+      toggleLike.mutate({
+        productId: product.id,
+        isCurrentlyLiked: liked,
+      });
 
-    // 좋아요를 추가할 때만 애니메이션 실행
-    if (!liked) {
-      setShowLikeAnimation(true);
-      setTimeout(() => setShowLikeAnimation(false), 1000);
-    }
+      // 좋아요를 추가할 때만 애니메이션 실행
+      if (!liked) {
+        setShowLikeAnimation(true);
+        setTimeout(() => setShowLikeAnimation(false), 1000);
+      }
 
-    // 좋아요 상태 전역 관리
-    subToggleLike(product.id);
-  };
+      // 좋아요 상태 전역 관리
+      subToggleLike(product.id);
+    },
+    [toggleLike.mutate, product.id, liked, subToggleLike]
+  );
 
   const handleImageLoad = () => {
     setImageLoaded(true);
@@ -61,7 +70,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{
         duration: 0.3,
-        delay: index * 0.05,
+        // delay: index * 0.05,
+        delay: 0.05,
         ease: "easeOut",
       }}
       className="card cursor-pointer group tap-highlight-none"
@@ -94,12 +104,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
 
         {/* Badges */}
         <div className="absolute top-2 left-2 flex flex-col gap-1">
-          {product.isNew && (
+          {product.is_new && (
             <span className="px-2 py-0.5 bg-primary-500 text-white text-xs font-medium rounded">
               NEW
             </span>
           )}
-          {product.isBest && (
+          {product.is_best && (
             <span className="px-2 py-0.5 bg-yellow-500 text-white text-xs font-medium rounded">
               BEST
             </span>
@@ -216,7 +226,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
         <div className="flex items-center gap-1 mb-2">
           <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
           <span className="text-xs text-gray-600">
-            {product.rating} ({product.reviewCount})
+            {product.rating} ({product.review_count})
           </span>
         </div>
 
@@ -225,7 +235,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
           <div className="flex items-end gap-1">
             {hasDiscount && (
               <span className="text-xs text-gray-400 line-through">
-                {product.originalPrice?.toLocaleString()}원
+                {product.original_price?.toLocaleString()}원
               </span>
             )}
             <span className="text-sm font-bold text-gray-900">
@@ -236,12 +246,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
           {/* Like Count */}
           <div className="flex items-center gap-1">
             <Heart className="w-3 h-3 text-gray-300" />
-            <span className="text-xs text-gray-400">{product.likeCount}</span>
+            <span className="text-xs text-gray-400">{product.like_count}</span>
           </div>
         </div>
       </div>
     </motion.div>
   );
-};
+});
 
 export default ProductCard;

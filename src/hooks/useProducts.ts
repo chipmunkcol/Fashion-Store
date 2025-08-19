@@ -104,6 +104,24 @@ export const useIsProductLiked = (productId: string) => {
   });
 };
 
+export const useProductLikedCount = () => {
+  return useQuery({
+    queryKey: ["products", "liked"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("is_liked", true);
+
+      if (error) throw new Error(error.message);
+      return (data as Product[]) || [];
+    },
+    select: (data: Product[]) => {
+      return data.length;
+    },
+  });
+};
+
 interface UseProductsOptions {
   category?: string | undefined;
   limit?: number;

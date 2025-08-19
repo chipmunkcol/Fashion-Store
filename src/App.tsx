@@ -1,30 +1,38 @@
+import { useEffect, useRef } from "react";
+import ReactGA from "react-ga4";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import BottomNavigation from "./components/BottomNavigation";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Main from "./pages/Main";
 import PaymentResult from "./pages/PaymentResult";
 import ProductDetail from "./pages/ProductDetail";
 import Wishlist from "./pages/Wishlist";
-import BottomNavigation from "./components/BottomNavigation";
-import ReactGA from "react-ga4";
-import { useEffect } from "react";
 
 // @ts-ignore
-import { supabase } from "./lib/supabase/supabase";
+import { useLikedProducts } from "./hooks/useProducts";
+import { useProductStore } from "./stores/useProductStore";
 
 function App() {
   useEffect(() => {
     ReactGA.initialize("G-ZMJJ639LY0");
   }, []);
 
-  useEffect(() => {
-    async function init() {
-      const { data, error } = await supabase.from("test").select("*");
-      console.log(data);
-    }
+  // 좋아요 상품의 서버상태 전역상태 동기화 작업
+  // useSyncLikedProducts();
+  const { data: likedProducts, isSuccess } = useLikedProducts();
+  const setterLikedProduct = useProductStore(
+    (state) => state.setterLikedProduct
+  );
+  const isSynced = useRef(false);
 
-    init();
-  }, []);
+  useEffect(() => {
+    if (isSuccess && likedProducts && !isSynced.current) {
+      const likedProductIds = likedProducts.map((product) => product.id);
+      setterLikedProduct(likedProductIds);
+      isSynced.current = true; // 한 번만 동기화
+    }
+  }, [isSuccess, likedProducts, setterLikedProduct]);
 
   return (
     <Router>

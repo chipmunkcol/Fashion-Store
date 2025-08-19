@@ -1,4 +1,4 @@
-import { Home, ShoppingCart, Heart } from "lucide-react";
+import { Heart, Home, ShoppingCart } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useCartStore } from "../stores/useCartStore";
@@ -6,15 +6,15 @@ import { useProductStore } from "../stores/useProductStore";
 
 const BottomNavigation: React.FC = () => {
   const navigate = useNavigate();
-  const { getTotalItems } = useCartStore();
-  const { likedProducts } = useProductStore();
+  const getTotalItems = useCartStore((state) => state.getTotalItems);
+  const likedCount = useProductStore((state) => state.likedCount);
 
   const location = useLocation();
   const params = useParams();
 
   const [activeTab, setActiveTab] = useState(location.pathname || "/");
   const cartItemCount = getTotalItems();
-  const likedItemCount = likedProducts.size;
+  const likedItemCount = likedCount();
 
   useEffect(() => {
     setActiveTab(location.pathname || "/");

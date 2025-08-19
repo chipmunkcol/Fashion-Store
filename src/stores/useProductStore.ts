@@ -14,9 +14,11 @@ interface ProductState {
   setSelectedCategory: (category: string) => void;
   setFilter: (filter: Partial<Filter>) => void;
   resetFilter: () => void;
+  setterLikedProduct: (productIds: string[]) => void;
 
   // Getters
   isLiked: (productId: string) => boolean;
+  likedCount: () => number;
 }
 
 const defaultFilter: Filter = {
@@ -42,6 +44,11 @@ export const useProductStore = create<ProductState>((set, get) => ({
       }
       return { likedProducts: newLikedProducts };
     });
+  },
+
+  // 서버 상태와 동기화
+  setterLikedProduct: (productIds: string[]) => {
+    set({ likedProducts: new Set(productIds) });
   },
 
   setSearchQuery: (query: string) => {
@@ -75,5 +82,9 @@ export const useProductStore = create<ProductState>((set, get) => ({
   // Getters
   isLiked: (productId: string) => {
     return get().likedProducts.has(productId);
+  },
+
+  likedCount: () => {
+    return get().likedProducts.size;
   },
 }));
