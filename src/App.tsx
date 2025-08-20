@@ -5,9 +5,10 @@ import BottomNavigation from "./components/BottomNavigation";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Main from "./pages/Main";
-import PaymentResult from "./pages/PaymentResult";
 import ProductDetail from "./pages/ProductDetail";
 import Wishlist from "./pages/Wishlist";
+import PaymentWidget from "./pages/payment/PaymentWidget";
+import PaymentResult from "./pages/payment/PaymentResult";
 
 // @ts-ignore
 import { useLikedProducts } from "./hooks/useProducts";
@@ -54,6 +55,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
 
           {/* Payment Result Pages */}
+          <Route path="/payment" element={<PaymentWidget />} />
           <Route path="/payment/success" element={<PaymentResult />} />
           <Route path="/payment/fail" element={<PaymentResult />} />
         </Routes>

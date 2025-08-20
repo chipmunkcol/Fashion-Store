@@ -18,7 +18,7 @@ interface ProductState {
 
   // Getters
   isLiked: (productId: string) => boolean;
-  likedCount: () => number;
+  // likedCount: () => number;
 }
 
 const defaultFilter: Filter = {
@@ -84,7 +84,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
     return get().likedProducts.has(productId);
   },
 
-  likedCount: () => {
-    return get().likedProducts.size;
-  },
+  // likedCount: () => {
+  //   return get().likedProducts.size;
+  // },
 }));

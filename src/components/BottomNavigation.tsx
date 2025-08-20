@@ -6,15 +6,15 @@ import { useProductStore } from "../stores/useProductStore";
 
 const BottomNavigation: React.FC = () => {
   const navigate = useNavigate();
-  const getTotalItems = useCartStore((state) => state.getTotalItems);
-  const likedCount = useProductStore((state) => state.likedCount);
+  const cartItems = useCartStore((state) => state.items);
+  const likedProducts = useProductStore((state) => state.likedProducts);
 
   const location = useLocation();
   const params = useParams();
 
   const [activeTab, setActiveTab] = useState(location.pathname || "/");
-  const cartItemCount = getTotalItems();
-  const likedItemCount = likedCount();
+  const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const likedItemCount = likedProducts.size;
 
   useEffect(() => {
     setActiveTab(location.pathname || "/");

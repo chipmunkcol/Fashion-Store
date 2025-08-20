@@ -26,3 +26,18 @@ ALTER TABLE products DISABLE ROW LEVEL SECURITY;
 CREATE INDEX idx_products_category ON products(category);
 CREATE INDEX idx_products_price ON products(price);
 CREATE INDEX idx_products_rating ON products(rating);
+
+
+-- payment 테이블 생성
+CREATE TABLE payment (
+ id BIGSERIAL PRIMARY KEY,
+ order_id VARCHAR(64) NOT NULL UNIQUE,
+ amount BIGINT NOT NULL,
+ payment_key VARCHAR(200),
+ created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+ updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 인덱스 추가 (검색 성능 향상)
+CREATE INDEX idx_payment_order_id ON payment(order_id);
+CREATE INDEX idx_payment_payment_key ON payment(payment_key);

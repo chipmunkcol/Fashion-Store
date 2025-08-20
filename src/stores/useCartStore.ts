@@ -13,7 +13,7 @@ interface CartState {
   updateQuantity: (itemId: string, quantity: number) => void;
   clearCart: () => void;
   getTotalPrice: () => number;
-  getTotalItems: () => number;
+  // getTotalItems: () => number;
   getItemCount: (productId: string) => number;
 }
 
@@ -79,10 +79,10 @@ export const useCartStore = create<CartState>()(
         );
       },
 
-      getTotalItems: () => {
-        const { items } = get();
-        return items.reduce((total, item) => total + item.quantity, 0);
-      },
+      // getTotalItems: () => {
+      //   const { items } = get();
+      //   return items.reduce((total, item) => total + item.quantity, 0);
+      // },
 
       getItemCount: (productId) => {
         const { items } = get();
