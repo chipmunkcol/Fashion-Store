@@ -58,10 +58,10 @@ export const useToggleLikeOptimized = () => {
 
   return useMutation({
     mutationFn: async ({
-      productId,
+      product,
       isCurrentlyLiked,
     }: {
-      productId: string;
+      product: Product;
       isCurrentlyLiked: boolean;
     }) => {
       const { data, error } = await supabase
@@ -69,7 +69,7 @@ export const useToggleLikeOptimized = () => {
         .update({
           is_liked: !isCurrentlyLiked,
         })
-        .eq("id", productId)
+        .eq("id", product.id)
         .select()
         .single();
 
@@ -77,11 +77,59 @@ export const useToggleLikeOptimized = () => {
       return data as Product;
     },
 
-    onSuccess: (updatedProduct) => {
-      // 1. 좋아요 목록 갱신
-      queryClient.invalidateQueries({ queryKey: ["products", "liked"] });
+    onMutate: async ({ product, isCurrentlyLiked }) => {
+      await queryClient.cancelQueries({ queryKey: ["products", "liked"] });
 
-      // 2. 무한 스크롤 쿼리 직접 업데이트
+      // 이전 데이터 백업
+      const previousLikedProducts = queryClient.getQueryData([
+        "products",
+        "liked",
+      ]);
+
+      // 즉시 UI 업데이트
+      queryClient.setQueryData<Product[]>(["products", "liked"], (oldData) => {
+        if (!oldData) return [];
+
+        if (!isCurrentlyLiked) {
+          const mockProduct = { ...product, is_liked: true } as Product;
+          return [...oldData, mockProduct];
+        } else {
+          return oldData.filter((p) => p.id !== product.id);
+        }
+      });
+
+      return { previousLikedProducts };
+    },
+
+    onSuccess: (updatedProduct) => {
+      const startTime = performance.now();
+      // 쿼리 키를 무효화 하는방법 (서버 재요청 -> 네트워크 비용 + 로딩 시간)
+      // queryClient.invalidateQueries({ queryKey: ["products", "liked"] });
+
+      // 즉시 캐시 업데이트 -> 빠름, 네트워크 비용 없음
+      if (updatedProduct) {
+        queryClient.setQueryData<Product[]>(
+          ["products", "liked"],
+          (oldData) => {
+            if (!oldData) return [updatedProduct];
+            return oldData.map((p) =>
+              p.id === updatedProduct.id ? updatedProduct : p
+            );
+          }
+        );
+      }
+
+      const endTime = performance.now();
+      console.log(`성능 체크 : ${endTime - startTime}`);
+    },
+
+    onError: (_err, _variable, context) => {
+      if (context?.previousLikedProducts) {
+        queryClient.setQueryData(
+          ["products", "liked"],
+          context.previousLikedProducts
+        );
+      }
     },
   });
 };

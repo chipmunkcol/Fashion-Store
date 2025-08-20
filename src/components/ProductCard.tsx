@@ -2,20 +2,27 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Heart, Star } from "lucide-react";
 import React, { memo, useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Product } from "../types";
-import {
-  useIsProductLiked,
-  useProduct,
-  useToggleLikeOptimized,
-} from "../hooks/useProducts";
+import { useToggleLikeOptimized } from "../hooks/useProducts";
 import { useProductStore } from "../stores/useProductStore";
+import { Product } from "../types";
 
 interface ProductCardProps {
   product: Product;
   // index: number;
 }
 
-const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  //필수 필드들이 없는 경우 (낙관적 UI 업데이트로 인한 예외처리)
+  if (!product.id || !product.name || !product.price) {
+    return (
+      <div className="card p-4 bg-red-50 border border-red-200">
+        <div className="text-center text-red-500">
+          상품 정보를 불러오는 중입니다..
+        </div>
+      </div>
+    );
+  }
+
   const navigate = useNavigate();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -26,12 +33,12 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
   const isLiked = useProductStore((state) => state.isLiked);
   const subToggleLike = useProductStore((state) => state.toggleLike);
 
-  // const liked = isLiked(product.id) ? isLiked(product.id) : product.is_liked;
-  const liked = isLiked(product.id);
+  // const liked = isLiked(product?.id) ? isLiked(product?.id) : product?.is_liked;
+  const liked = isLiked(product?.id);
 
-  // const liked = isLiked(product.id);
+  // const liked = isLiked(product?.id);
   const hasDiscount =
-    product.discount === 0 || product.discount === undefined ? false : true;
+    product?.discount === 0 || product?.discount === undefined ? false : true;
 
   const handleLikeClick = useCallback(
     (e: React.MouseEvent) => {
@@ -39,7 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
       e.stopPropagation();
 
       toggleLike.mutate({
-        productId: product.id,
+        product: product,
         isCurrentlyLiked: liked,
       });
 
@@ -50,9 +57,9 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
       }
 
       // 좋아요 상태 전역 관리
-      subToggleLike(product.id);
+      subToggleLike(product?.id);
     },
-    [toggleLike.mutate, product.id, liked, subToggleLike]
+    [toggleLike.mutate, product?.id, liked, subToggleLike]
   );
 
   const handleImageLoad = () => {
@@ -76,7 +83,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
       }}
       className="card cursor-pointer group tap-highlight-none"
       onClick={() => {
-        navigate(`/product/${product.id}`);
+        navigate(`/product/${product?.id}`);
       }}
     >
       {/* Product Image */}
@@ -85,8 +92,8 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
 
         {!imageError ? (
           <img
-            src={product.images[0]}
-            alt={product.name}
+            src={product?.images?.[0]}
+            alt={product?.name}
             className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${
               imageLoaded ? "opacity-100" : "opacity-0"
             }`}
@@ -104,19 +111,19 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
 
         {/* Badges */}
         <div className="absolute top-2 left-2 flex flex-col gap-1">
-          {product.is_new && (
+          {product?.is_new && (
             <span className="px-2 py-0.5 bg-primary-500 text-white text-xs font-medium rounded">
               NEW
             </span>
           )}
-          {product.is_best && (
+          {product?.is_best && (
             <span className="px-2 py-0.5 bg-yellow-500 text-white text-xs font-medium rounded">
               BEST
             </span>
           )}
           {hasDiscount && (
             <span className="px-2 py-0.5 bg-red-500 text-white text-xs font-medium rounded">
-              {product.discount}%
+              {product?.discount}%
             </span>
           )}
         </div>
@@ -214,19 +221,19 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
       <div className="p-3">
         {/* Brand */}
         <p className="text-xs text-gray-500 font-medium mb-1 truncate">
-          {product.brand}
+          {product?.brand}
         </p>
 
         {/* Name */}
         <h3 className="text-sm font-medium text-gray-900 mb-2 line-clamp-2 leading-tight">
-          {product.name}
+          {product?.name}
         </h3>
 
         {/* Rating & Reviews */}
         <div className="flex items-center gap-1 mb-2">
           <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
           <span className="text-xs text-gray-600">
-            {product.rating} ({product.review_count})
+            {product?.rating} ({product?.review_count})
           </span>
         </div>
 
@@ -235,23 +242,23 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
           <div className="flex items-end gap-1">
             {hasDiscount && (
               <span className="text-xs text-gray-400 line-through">
-                {product.original_price?.toLocaleString()}원
+                {product?.original_price?.toLocaleString()}원
               </span>
             )}
             <span className="text-sm font-bold text-gray-900">
-              {product.price.toLocaleString()}원
+              {product?.price?.toLocaleString()}원
             </span>
           </div>
 
           {/* Like Count */}
           <div className="flex items-center gap-1">
             <Heart className="w-3 h-3 text-gray-300" />
-            <span className="text-xs text-gray-400">{product.like_count}</span>
+            <span className="text-xs text-gray-400">{product?.like_count}</span>
           </div>
         </div>
       </div>
     </motion.div>
   );
-});
+};
 
 export default ProductCard;

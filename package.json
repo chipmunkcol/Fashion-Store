@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Mobile-first fashion e-commerce platform like A-bly",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

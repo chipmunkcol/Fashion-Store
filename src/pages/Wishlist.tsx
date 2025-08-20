@@ -129,9 +129,10 @@ const Wishlist: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <AnimatePresence mode="popLayout">
                   {likedProductsList &&
+                    likedProductsList.length > 0 &&
                     likedProductsList.map((product, index) => (
                       <motion.div
-                        key={product.id}
+                        key={`wishlist-productCard-${product.id}`}
                         layout
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -141,7 +142,7 @@ const Wishlist: React.FC = () => {
                           delay: index * 0.05,
                         }}
                       >
-                        <ProductCard product={product} index={index} />
+                        <ProductCard product={product} />
                       </motion.div>
                     ))}
                 </AnimatePresence>
