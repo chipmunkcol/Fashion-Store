@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactGA from "react-ga4";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import BottomNavigation from "./components/BottomNavigation";
@@ -13,12 +13,10 @@ import PaymentResult from "./pages/payment/PaymentResult";
 // @ts-ignore
 import { useLikedProducts } from "./hooks/useProducts";
 import { useProductStore } from "./stores/useProductStore";
+import { useAdminStore } from "./stores/useAdminStore";
 
 function App() {
-  useEffect(() => {
-    ReactGA.initialize("G-ZMJJ639LY0");
-  }, []);
-
+  const { isAdmin } = useAdminStore()
   // 좋아요 상품의 서버상태 전역상태 동기화 작업
   // useSyncLikedProducts();
   const { data: likedProducts, isSuccess } = useLikedProducts();
@@ -26,6 +24,7 @@ function App() {
     (state) => state.setterLikedProduct
   );
   const isSynced = useRef(false);
+  const [] = useState(false)
 
   useEffect(() => {
     if (isSuccess && likedProducts && !isSynced.current) {
@@ -34,6 +33,10 @@ function App() {
       isSynced.current = true; // 한 번만 동기화
     }
   }, [isSuccess, likedProducts, setterLikedProduct]);
+
+  useEffect(() => {
+    ReactGA.initialize("G-ZMJJ639LY0");
+  }, []);
 
   return (
     <Router>
@@ -58,6 +61,15 @@ function App() {
           <Route path="/payment" element={<PaymentWidget />} />
           <Route path="/payment/success" element={<PaymentResult />} />
           <Route path="/payment/fail" element={<PaymentResult />} />
+        
+          {/* Admin Routes - isAdmin이 true일 때만 렌더링 */}
+          {isAdmin && (
+           <>
+             <Route path="/admin" element={<AdminDashboard />} />
+             <Route path="/admin/products" element={<AdminProducts />} />
+             <Route path="/admin/orders" element={<AdminOrders />} />
+           </>
+          )}
         </Routes>
         <BottomNavigation />
       </div>
