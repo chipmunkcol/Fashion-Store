@@ -4,7 +4,8 @@
 
 [🔗개발하면서 작성한 블로그 (React Three Fiber)](https://fkawnltjsejdj.tistory.com/category/R3F%28React%20Three%20Fiber%29)
 
-![소개영상](https://github.com/user-attachments/assets/b866eb2f-fb77-459f-bd64-7f99f6845396)
+![소개영상](https://github.com/user-attachments/assets/7daf498e-ed8c-4772-ad7c-c73c8eb906b4)
+
 
 ## ✨ 주요 기능
 
@@ -41,9 +42,30 @@ src/
 └── main.tsx
 ```
 
+## 실행 방법
+
+1. 저장소를 클론합니다.
+```bash
+git clone https://github.com/chipmunkcol/Fashion-Store.git
+cd Fashion-Store
+```
+
+2. 의존성을 설치합니다.
+```bash
+npm install
+```
+
+3. 개발 서버를 실행합니다.
+```bash
+npm run dev
+```
+
+<br />
+
+
 ## 러닝 포인트💪
 
-1. [Framer Motion](#1framer-motion)
+1. [Framer Motion](#1-framer-motion)
 2. [Three.js (react-three/fiber)](#2-threejs-react-threefiber)
 
 ### 1. Framer Motion
