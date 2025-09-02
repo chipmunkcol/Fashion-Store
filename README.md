@@ -2,6 +2,7 @@
 
 모바일에 최적화된 패션 쇼핑몰입니다. 에이블리 스타일을 참고해 가볍고 직관적인 UX에 집중했습니다. <br />
 
+[🔗개발하면서 작성한 블로그 (이커머스 도메인)](https://fkawnltjsejdj.tistory.com/97) <br >
 [🔗개발하면서 작성한 블로그 (React Three Fiber)](https://fkawnltjsejdj.tistory.com/category/R3F%28React%20Three%20Fiber%29)
 
 ![소개영상](https://github.com/user-attachments/assets/7daf498e-ed8c-4772-ad7c-c73c8eb906b4)
