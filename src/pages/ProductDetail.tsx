@@ -38,6 +38,10 @@ const ProductDetail: React.FC<ProductDetailProps> = () => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
