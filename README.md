@@ -1,9 +1,12 @@
 # Fashion Store 🛍️
 
 모바일에 최적화된 패션 쇼핑몰입니다. 에이블리 스타일을 참고해 가볍고 직관적인 UX에 집중했습니다. <br />
-[🛍️Fashion Store](https://fashion-store-iota-three.vercel.app/)
 
-<img width="400" height="425" alt="image" src="https://github.com/user-attachments/assets/91d026bc-8e1c-4793-a633-2ee3d493e0ae" />
+[🔗개발하면서 작성한 블로그 (이커머스 도메인)](https://fkawnltjsejdj.tistory.com/97) <br >
+[🔗개발하면서 작성한 블로그 (React Three Fiber)](https://fkawnltjsejdj.tistory.com/category/R3F%28React%20Three%20Fiber%29)
+
+![소개영상](https://github.com/user-attachments/assets/7daf498e-ed8c-4772-ad7c-c73c8eb906b4)
+
 
 ## ✨ 주요 기능
 
@@ -17,6 +20,8 @@
 ## 🛠️ 기술 스택
 
 - **Frontend**: React 18, TypeScript
+- **Backend**: Express.js
+- **DB** : Supabase
 - **상태 관리**: Zustand
 - **데이터 페칭**: TanStack Query
 - **스타일링**: Tailwind CSS
@@ -38,17 +43,30 @@ src/
 └── main.tsx
 ```
 
-## ⚙️ 기타
+## 실행 방법
 
-- `Intersection Observer` + `useInfiniteQuery` 로 무한 스크롤 구현
-- `React.memo`, `useMemo` 로 렌더링 최적화
-- 모바일 반응형 및 iOS Safe Area 대응
+1. 저장소를 클론합니다.
+```bash
+git clone https://github.com/chipmunkcol/Fashion-Store.git
+cd Fashion-Store
+```
+
+2. 의존성을 설치합니다.
+```bash
+npm install
+```
+
+3. 개발 서버를 실행합니다.
+```bash
+npm run dev
+```
+
+<br />
+
 
 ## 러닝 포인트💪
 
-[🔗개발하면서 작성한 블로그 (React Three Fiber)](https://fkawnltjsejdj.tistory.com/category/R3F%28React%20Three%20Fiber%29)
-
-1. [Framer Motion](#1framer-motion)
+1. [Framer Motion](#1-framer-motion)
 2. [Three.js (react-three/fiber)](#2-threejs-react-threefiber)
 
 ### 1. Framer Motion
