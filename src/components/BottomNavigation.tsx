@@ -1,19 +1,32 @@
-import { Heart, Home, ShoppingCart } from "lucide-react";
+import { Heart, Home, ShoppingCart, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useCartStore } from "../stores/useCartStore";
 import { useProductStore } from "../stores/useProductStore";
+import { useQuery } from "@tanstack/react-query";
+import { apiCart } from "../utils/api";
+import { useAdminStore } from "../stores/useAdminStore";
 
 const BottomNavigation: React.FC = () => {
   const navigate = useNavigate();
-  const cartItems = useCartStore((state) => state.items);
+  // const cartItems = useCartStore((state) => state.items);
   const likedProducts = useProductStore((state) => state.likedProducts);
+  const userId = useAdminStore((state) => state.userId); // userId가 바뀌면 리렌더링
+
+  const { data: cartCount, isLoading } = useQuery({
+    queryKey: ["cart", userId()],
+    queryFn: () => apiCart(userId()),
+    enabled: !!userId, // userId가 있을 때만 쿼리 실행
+    select: (data) =>
+      data?.products.reduce((acc, val) => acc + val.quantity, 0) || 0,
+  });
+  // console.log("🚀 ~ BottomNavigation ~ data:", cartCount);
 
   const location = useLocation();
   const params = useParams();
 
   const [activeTab, setActiveTab] = useState(location.pathname || "/");
-  const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  // const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   const likedItemCount = likedProducts.size;
 
   useEffect(() => {
@@ -34,10 +47,10 @@ const BottomNavigation: React.FC = () => {
       label: "장바구니",
       icon: ShoppingCart,
       path: "/cart",
-      badge: cartItemCount,
+      badge: isLoading ? 0 : cartCount,
     },
     // { id: "search", label: "검색", icon: Search, path: "/search" },
-    // { id: "profile", label: "마이페이지", icon: User, path: "/profile" },
+    { id: "profile", label: "마이페이지", icon: User, path: "/profile" },
   ];
 
   const handleTabClick = (tab: (typeof tabs)[0]) => {

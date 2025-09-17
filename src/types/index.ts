@@ -1,3 +1,38 @@
+export interface Fake_User {
+  id: number;
+  name: {
+    firstname: string;
+    lastname: string;
+  };
+  password: string;
+  username: string;
+  email: string;
+  phone: string;
+  address: {
+    geolocation: {
+      lat: string;
+      long: string;
+    };
+    city: string;
+    street: string;
+    number: number;
+    zipcode: string;
+  };
+}
+
+export interface Fake_Product {
+  id: number;
+  title: string;
+  category: string;
+  description: string;
+  image: string;
+  price: number;
+  rating: {
+    rate: number;
+    count: number;
+  };
+}
+
 export interface Product {
   id: string;
   name: string;

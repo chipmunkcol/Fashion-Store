@@ -1,22 +1,33 @@
 import { useEffect, useRef, useState } from "react";
 import ReactGA from "react-ga4";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+  Route,
+  BrowserRouter as Router,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import BottomNavigation from "./components/BottomNavigation";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Main from "./pages/Main";
 import ProductDetail from "./pages/ProductDetail";
 import Wishlist from "./pages/Wishlist";
-import PaymentWidget from "./pages/payment/PaymentWidget";
 import PaymentResult from "./pages/payment/PaymentResult";
+import PaymentWidget from "./pages/payment/PaymentWidget";
 
 // @ts-ignore
 import { useLikedProducts } from "./hooks/useProducts";
-import { useProductStore } from "./stores/useProductStore";
+import Profile from "./pages/Profile";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminProducts from "./pages/admin/AdminProducts";
+import ProtectedAdminRoute from "./pages/common/ProtectedAdminRoute";
+import ProtectedRoute from "./pages/common/ProtectedRoute";
 import { useAdminStore } from "./stores/useAdminStore";
+import { useProductStore } from "./stores/useProductStore";
+import Login from "./pages/Login";
 
 function App() {
-  const { isAdmin } = useAdminStore()
   // 좋아요 상품의 서버상태 전역상태 동기화 작업
   // useSyncLikedProducts();
   const { data: likedProducts, isSuccess } = useLikedProducts();
@@ -24,7 +35,7 @@ function App() {
     (state) => state.setterLikedProduct
   );
   const isSynced = useRef(false);
-  const [] = useState(false)
+  const [] = useState(false);
 
   useEffect(() => {
     if (isSuccess && likedProducts && !isSynced.current) {
@@ -42,17 +53,14 @@ function App() {
     <Router>
       <div className="max-w-screen-sm mx-auto min-h-screen bg-white">
         <Routes>
+          {/* Auth */}
+          <Route path="/login" element={<Login />} />
+
           {/* Home Page */}
           <Route path="/" element={<Main />} />
 
           {/* Product Detail Page */}
           <Route path="/product/:id" element={<ProductDetail />} />
-
-          {/* Wishlist Page */}
-          <Route path="/wishlist" element={<Wishlist />} />
-
-          {/* Cart Page */}
-          <Route path="/cart" element={<Cart />} />
 
           {/* Checkout Page */}
           <Route path="/checkout" element={<Checkout />} />
@@ -61,15 +69,23 @@ function App() {
           <Route path="/payment" element={<PaymentWidget />} />
           <Route path="/payment/success" element={<PaymentResult />} />
           <Route path="/payment/fail" element={<PaymentResult />} />
-        
-          {/* Admin Routes - isAdmin이 true일 때만 렌더링 */}
-          {isAdmin && (
-           <>
-             <Route path="/admin" element={<AdminDashboard />} />
-             <Route path="/admin/products" element={<AdminProducts />} />
-             <Route path="/admin/orders" element={<AdminOrders />} />
-           </>
-          )}
+
+          {/* 인증 필요 */}
+          <Route element={<ProtectedRoute />}>
+            {/* Wishlist Page */}
+            <Route path="/wishlist" element={<Wishlist />} />
+
+            {/* Cart Page */}
+            <Route path="/cart" element={<Cart />} />
+
+            <Route path="profile" element={<Profile />} />
+          </Route>
+
+          <Route element={<ProtectedAdminRoute />}>
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/products" element={<AdminProducts />} />
+            <Route path="/admin/orders" element={<AdminOrders />} />
+          </Route>
         </Routes>
         <BottomNavigation />
       </div>

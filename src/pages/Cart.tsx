@@ -1,33 +1,40 @@
+import { ArrowLeft, Minus, Plus, ShoppingBag } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
-import { useCartStore } from "../stores/useCartStore";
+import useCartWithProducts from "../hooks/useCartWithProducts";
+import { useUpdateToCart } from "../hooks/useUpdateToCart";
+import { useAdminStore } from "../stores/useAdminStore";
 
+const cartId = 1; // 임시 cartId
 const Cart: React.FC = () => {
   const navigate = useNavigate();
+  const userId = useAdminStore((state) => state.userId()); // userId가 바뀌면 리렌더링
+
+  // console.log("🚀 ~ Cart ~ currentUserId:", currentUserId);
+
+  // 개선된 커스텀 훅 사용
   const {
-    items,
-    updateQuantity,
-    removeFromCart,
-    getTotalPrice,
-    getTotalItems,
-  } = useCartStore();
+    carts,
+    products: productDatas,
+    isLoading: productsLoading,
+    error,
+  } = useCartWithProducts(cartId);
 
-  const handleQuantityChange = (
-    itemId: string,
-    currentQuantity: number,
-    delta: number
-  ) => {
-    const newQuantity = currentQuantity + delta;
-    if (newQuantity >= 1) {
-      updateQuantity(itemId, newQuantity);
-    }
-  };
+  const { handleAddToCart } = useUpdateToCart(cartId, Number(userId));
 
-  const handleCheckout = () => {
-    if (items.length === 0) return;
-    navigate("/checkout");
-  };
+  // 안전한 데이터 접근
+  const items = carts?.products || [];
+  const cartTotalQuantity = items.reduce((acc, val) => acc + val.quantity, 0);
+
+  const totalAmount = items.reduce((sum, item) => {
+    const productPrice =
+      productDatas.find((p) => p?.id === item.productId)?.price || 0;
+    return sum + productPrice * item.quantity;
+  }, 0);
+
+  // 조건부 렌더링
+  if (productsLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   if (items.length === 0) {
     return (
@@ -79,184 +86,70 @@ const Cart: React.FC = () => {
           >
             <ArrowLeft className="h-6 w-6 text-gray-700" />
           </button>
-          <h1 className="text-lg font-semibold text-gray-900">
-            장바구니 ({getTotalItems()})
-          </h1>
+          <h1 className="text-lg font-semibold text-gray-900">장바구니</h1>
           <div className="w-10" /> {/* Spacer */}
         </div>
       </header>
 
       {/* Cart Items */}
       <div className="px-4 py-4 space-y-4">
-        {items.map((item) => (
-          <div key={item.id} className="bg-white rounded-lg p-4 shadow-sm">
-            <div className="flex space-x-3">
-              {/* Product Image */}
-              <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                <img
-                  src={item.product.images[0]}
-                  alt={item.product.name}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src =
-                      "https://via.placeholder.com/80x80?text=No+Image";
-                  }}
-                />
-              </div>
+        {items.map((item, index) => {
+          const productData = productDatas[index];
+          const productPrice = productData.price * item.quantity || 0;
 
-              {/* Product Info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex justify-between items-start mb-1">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs text-gray-500 mb-1">
-                      {item.product.brand}
-                    </p>
-                    <h3 className="text-sm font-medium text-gray-900 line-clamp-2">
-                      {item.product.name}
-                    </h3>
-                  </div>
-                  <button
-                    onClick={() => removeFromCart(item.id)}
-                    className="p-1 text-gray-400 hover:text-red-500 transition-colors ml-2"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+          return (
+            <div
+              key={item.productId}
+              className="bg-white rounded-lg shadow p-4 flex justify-between items-center"
+            >
+              <div>
+                <div className="w-16 h-16 flex-shrink-0 mr-4">
+                  <img src={productData.image} className="w-full h-full" />
                 </div>
-
-                {/* Selected Options */}
-                {item.selectedOptions &&
-                  Object.keys(item.selectedOptions).length > 0 && (
-                    <div className="flex flex-wrap gap-1 mb-2">
-                      {Object.entries(item.selectedOptions).map(
-                        ([key, value]) => (
-                          <span
-                            key={key}
-                            className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded"
-                          >
-                            {key === "size"
-                              ? "사이즈"
-                              : key === "color"
-                              ? "색상"
-                              : key}
-                            : {value}
-                          </span>
-                        )
-                      )}
-                    </div>
-                  )}
-
-                {/* Price and Quantity */}
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    {item.product.originalPrice && (
-                      <span className="text-xs text-gray-400 line-through">
-                        ₩{item.product.originalPrice.toLocaleString()}
-                      </span>
-                    )}
-                    <span className="text-sm font-bold text-gray-900">
-                      ₩{item.product.price.toLocaleString()}
-                    </span>
-                  </div>
-
-                  {/* Quantity Controls */}
-                  <div className="flex items-center border border-gray-300 rounded-lg">
-                    <button
-                      onClick={() =>
-                        handleQuantityChange(item.id, item.quantity, -1)
-                      }
-                      className="p-1 hover:bg-gray-50 transition-colors"
-                      disabled={item.quantity <= 1}
-                    >
-                      <Minus className="h-4 w-4 text-gray-600" />
-                    </button>
-                    <span className="px-3 py-1 text-sm font-medium">
-                      {item.quantity}
-                    </span>
-                    <button
-                      onClick={() =>
-                        handleQuantityChange(item.id, item.quantity, 1)
-                      }
-                      className="p-1 hover:bg-gray-50 transition-colors"
-                      disabled={item.quantity >= 10}
-                    >
-                      <Plus className="h-4 w-4 text-gray-600" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Item Total */}
-                <div className="text-right mt-2">
-                  <span className="text-sm font-bold text-gray-900">
-                    소계: ₩
-                    {(item.product.price * item.quantity).toLocaleString()}
-                  </span>
+                <div className="w-40 overflow-hidden text-ellipsis whitespace-nowrap">
+                  {" "}
+                  {productData.title}
                 </div>
               </div>
+              <div className="flex items-center gap-3">
+                수량 :
+                <button
+                  onClick={() => handleAddToCart(item.productId, -1)}
+                  className="p-1 border rounded-full ml-2"
+                >
+                  <Minus />
+                </button>
+                <div>{item.quantity}</div>
+                <button
+                  onClick={() => handleAddToCart(item.productId, 1)}
+                  className="p-1 border rounded-full ml-2"
+                >
+                  <Plus />
+                </button>
+              </div>
+              <div>금액: ${productPrice}</div>
             </div>
+          );
+        })}
+
+        <div>총 금액: ${totalAmount}</div>
+
+        {/* Bottom Actions */}
+        <div className="max-w-screen-sm mx-auto fixed z-50 bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-4 shadow-lg">
+          <div className="flex space-x-3">
+            <button
+              onClick={() => navigate("/")}
+              className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 py-4 rounded-lg font-semibold transition-colors"
+            >
+              쇼핑 계속하기
+            </button>
+            <button
+              onClick={() => {}}
+              className="flex-1 bg-black hover:bg-gray-800 text-white py-4 rounded-lg font-semibold transition-colors"
+            >
+              결제하기 ({cartTotalQuantity} 개)
+            </button>
           </div>
-        ))}
-      </div>
-
-      {/* Order Summary */}
-      <div className="px-4 py-4">
-        <div className="bg-white rounded-lg p-4 shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">
-            주문 요약
-          </h3>
-
-          <div className="space-y-2 mb-4">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">상품 금액</span>
-              <span className="text-gray-900">
-                ₩{getTotalPrice().toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">배송비</span>
-              <span className="text-gray-900">
-                {getTotalPrice() >= 50000 ? "무료" : "₩3,000"}
-              </span>
-            </div>
-            <div className="border-t border-gray-200 pt-2">
-              <div className="flex justify-between text-lg font-bold">
-                <span className="text-gray-900">총 결제금액</span>
-                <span className="text-gray-900">
-                  ₩
-                  {(
-                    getTotalPrice() + (getTotalPrice() >= 50000 ? 0 : 3000)
-                  ).toLocaleString()}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {getTotalPrice() < 50000 && (
-            <div className="bg-blue-50 p-3 rounded-lg mb-4">
-              <p className="text-sm text-blue-700">
-                ₩{(50000 - getTotalPrice()).toLocaleString()} 더 구매하시면
-                무료배송이에요!
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Bottom Actions */}
-      <div className="max-w-screen-sm mx-auto fixed z-50 bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-4 shadow-lg">
-        <div className="flex space-x-3">
-          <button
-            onClick={() => navigate("/")}
-            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 py-4 rounded-lg font-semibold transition-colors"
-          >
-            쇼핑 계속하기
-          </button>
-          <button
-            onClick={handleCheckout}
-            className="flex-1 bg-black hover:bg-gray-800 text-white py-4 rounded-lg font-semibold transition-colors"
-          >
-            결제하기 ({getTotalItems()}개)
-          </button>
         </div>
       </div>
     </div>
